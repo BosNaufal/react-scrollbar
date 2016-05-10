@@ -255,7 +255,7 @@ class ScrollWrapper extends React.Component {
 
   componentWillUnmount(){
     // Remove Event
-    window.removeEventListener('resize', this.refresh.bind(this))
+    window.removeEventListener('resize', this.calculateSize.bind(this))
   }
 
 }

@@ -207,8 +207,7 @@ class ScrollWrapper extends React.Component {
     this.setState({ dragging: false })
   }
 
-  componentDidMount() {
-
+  calculateSize(){
     // The Elements
     let $scrollArea = this.refs.scrollArea
     let $scrollWrapper = this.refs.scrollWrapper
@@ -216,9 +215,8 @@ class ScrollWrapper extends React.Component {
     // Computed Style
     let scrollWrapperStyle = window.getComputedStyle($scrollWrapper,null)
 
-    // Set the State!
-    this.setState({
-
+    // Get new Elements Size
+    let elementSize = {
       // Scroll Area Height and Width
       scrollAreaHeight: $scrollArea.children[0].clientHeight,
       scrollAreaWidth: $scrollArea.children[0].clientWidth,
@@ -226,11 +224,38 @@ class ScrollWrapper extends React.Component {
       // Scroll Wrapper Height and Width
       scrollWrapperHeight: parseFloat(scrollWrapperStyle.height),
       scrollWrapperWidth: parseFloat(scrollWrapperStyle.width),
+    }
 
-      // Make sure The wrapper is Ready, then render the scrollbar
-      ready: true
-    })
+    if( elementSize.scrollWrapperHeight != this.state.scrollWrapperHeight ||
+        elementSize.scrollWrapperWidth != this.state.scrollWrapperWidth )
+    {
+      // Set the State!
+      this.setState({
 
+        // Scroll Area Height and Width
+        scrollAreaHeight: elementSize.scrollAreaHeight,
+        scrollAreaWidth: elementSize.scrollAreaWidth,
+
+        // Scroll Wrapper Height and Width
+        scrollWrapperHeight: elementSize.scrollWrapperHeight,
+        scrollWrapperWidth: elementSize.scrollWrapperWidth,
+
+        // Make sure The wrapper is Ready, then render the scrollbar
+        ready: true
+      })
+    }
+  }
+
+  componentDidMount() {
+    this.calculateSize()
+
+    // Attach The Event for Responsive View~
+    window.addEventListener('resize', this.calculateSize.bind(this))
+  }
+
+  componentWillUnmount(){
+    // Remove Event
+    window.removeEventListener('resize', this.refresh.bind(this))
   }
 
 }

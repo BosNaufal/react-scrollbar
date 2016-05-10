@@ -115,9 +115,17 @@ class HorizontalScrollbar extends React.Component {
     }
   }
 
-  componentDidMount() {
+  calculateSize(source){
     // Scrollbar Width
-    this.setState({ width:  this.props.wrapper.width / this.props.area.width * 100 })
+    this.setState({ width: source.wrapper.width / source.area.width * 100 })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.wrapper.width !== this.props.wrapper.width) this.calculateSize(nextProps)
+  }
+
+  componentDidMount() {
+    this.calculateSize(this.props)
 
     // Put the Listener
     document.addEventListener("mousemove", this.onDrag.bind(this))

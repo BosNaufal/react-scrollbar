@@ -115,9 +115,17 @@ class VerticalScrollbar extends React.Component {
     }
   }
 
-  componentDidMount() {
+  calculateSize(source){
     // Scrollbar Height
-    this.setState({ height:  this.props.wrapper.height / this.props.area.height * 100 })
+    this.setState({ height: source.wrapper.height / source.area.height * 100 })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.wrapper.height !== this.props.wrapper.height) this.calculateSize(nextProps)
+  }
+
+  componentDidMount() {
+    this.calculateSize(this.props)
 
     // Put the Listener
     document.addEventListener("mousemove", this.onDrag.bind(this))

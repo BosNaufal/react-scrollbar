@@ -1,6 +1,6 @@
 # React Scrollbar
 
-The Simplest Scroll Area Component with custom scrollbar for [React Js](http://facebook.github.io/react/). It's adopted from [reactScrollbar](https://github.com/souhe/reactScrollbar) but without any dependencies. All animation, Height and Width are pure CSS, So it's TOTALLY customizable.
+The Simplest Scroll Area Component with custom scrollbar for [React Js](http://facebook.github.io/react/). It's adopted from [reactScrollbar](https://github.com/souhe/reactScrollbar) but without any dependencies. All animation, Height and Width are pure CSS, So it's TOTALLY **CUSTOMIZABLE** and **RESPONSIVE**! YEAH!.
 
 [DEMO](https://bosnaufal.github.io/react-scrollbar)
 
@@ -46,11 +46,12 @@ ReactDOM.render(<App />, document.getElementById("app"))
 
 ## Props
 ##### clasess (String)
-Just the ordinary class name for styling the wrapper. It's TOTALLY CUSTOMIZABLE!
+Just the ordinary class name for styling the wrapper. So, It's TOTALLY **CUSTOMIZABLE!**
 ```css
 /*The Wrapper*/
 .my-scrollbar{
-  max-width: 500px;
+  width: 35%;
+  min-width: 300px;
   max-height: 450px;
 }
 

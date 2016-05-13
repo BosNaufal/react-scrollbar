@@ -44,7 +44,7 @@ class VerticalScrollbar extends React.Component {
     // Prepare to drag
     this.setState({
       dragging: true,
-      start: e.pageY
+      start: e.clientY
     })
   }
 
@@ -60,11 +60,11 @@ class VerticalScrollbar extends React.Component {
 
       e = e.changedTouches ? e.changedTouches[0] : e
 
-      let yMovement = e.pageY - this.state.start
+      let yMovement = e.clientY - this.state.start
       let yMovementPercentage = yMovement / this.props.wrapper.height * 100
 
-      // Update the last e.pageY
-      this.setState({ start: e.pageY }, () => {
+      // Update the last e.clientY
+      this.setState({ start: e.clientY }, () => {
 
         // The next Vertical Value will be
         let next = this.props.scrolling + yMovementPercentage
@@ -97,12 +97,12 @@ class VerticalScrollbar extends React.Component {
       let position = this.refs.scrollbar.getBoundingClientRect()
 
       // Calculate the vertical Movement
-      let yMovement = e.pageY - position.top
+      let yMovement = e.clientY - position.top
       let centerize = (this.state.height / 2)
       let yMovementPercentage = yMovement / this.props.wrapper.height * 100 - centerize
 
-      // Update the last e.pageY
-      this.setState({ start: e.pageY }, () => {
+      // Update the last e.clientY
+      this.setState({ start: e.clientY }, () => {
 
         // The next Vertical Value will be
         let next = this.props.scrolling + yMovementPercentage
@@ -121,7 +121,8 @@ class VerticalScrollbar extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.wrapper.height !== this.props.wrapper.height) this.calculateSize(nextProps)
+    if( nextProps.wrapper.height !== this.props.wrapper.height ||
+        nextProps.area.height !== this.props.area.height ) this.calculateSize(nextProps)
   }
 
   componentDidMount() {

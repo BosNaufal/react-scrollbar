@@ -44,7 +44,7 @@ class HorizontalScrollbar extends React.Component {
     // Prepare to drag
     this.setState({
       dragging: true,
-      start: e.pageX
+      start: e.clientX
     })
   }
 
@@ -60,11 +60,11 @@ class HorizontalScrollbar extends React.Component {
 
       e = e.changedTouches ? e.changedTouches[0] : e
 
-      let xMovement = e.pageX - this.state.start
+      let xMovement = e.clientX - this.state.start
       let xMovementPercentage = xMovement / this.props.wrapper.width * 100
 
-      // Update the last e.pageX
-      this.setState({ start: e.pageX }, () => {
+      // Update the last e.clientX
+      this.setState({ start: e.clientX }, () => {
 
         // The next Horizontal Value will be
         let next = this.props.scrolling + xMovementPercentage
@@ -97,12 +97,12 @@ class HorizontalScrollbar extends React.Component {
       let position = this.refs.scrollbar.getBoundingClientRect()
 
       // Calculate the horizontal Movement
-      let xMovement = e.pageX - position.left
+      let xMovement = e.clientX - position.left
       let centerize = (this.state.width / 2)
       let xMovementPercentage = xMovement / this.props.wrapper.width * 100 - centerize
 
-      // Update the last e.pageX
-      this.setState({ start: e.pageX }, () => {
+      // Update the last e.clientX
+      this.setState({ start: e.clientX }, () => {
 
         // The next Horizontal Value will be
         let next = this.props.scrolling + xMovementPercentage
@@ -121,7 +121,8 @@ class HorizontalScrollbar extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.wrapper.width !== this.props.wrapper.width) this.calculateSize(nextProps)
+    if( nextProps.wrapper.width !== this.props.wrapper.width ||
+        nextProps.area.width !== this.props.area.width ) this.calculateSize(nextProps)
   }
 
   componentDidMount() {

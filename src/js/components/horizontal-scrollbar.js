@@ -31,6 +31,8 @@ class HorizontalScrollbar extends React.Component {
 
       </div>
     )
+
+    else return null
   }
 
 

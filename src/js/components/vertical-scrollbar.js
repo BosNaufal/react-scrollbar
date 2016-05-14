@@ -31,6 +31,8 @@ class VerticalScrollbar extends React.Component {
 
       </div>
     )
+
+    else return null
   }
 
 

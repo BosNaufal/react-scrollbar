@@ -4,10 +4,10 @@ require('es6-promise').polyfill();
 
 module.exports = {
 
-  entry: './src/js/components/app.js',
+  entry: __dirname + '/src/js/components/app.js',
 
   output: {
-    path: './build',
+    path: __dirname + '/build',
     filename: 'build.js'
   },
 
@@ -29,6 +29,13 @@ module.exports = {
         'NODE_ENV': '"production"'
       }
     })
-  ]
+  ],
+  devServer: {
+        contentBase: "./build",
+        colors: true,
+        historyApiFallback: true,
+        inline: true,
+        hot: true
+    }
 
 };

@@ -35,7 +35,9 @@ class ScrollWrapper extends React.Component {
       <div
         onClick={ this.calculateSize.bind(this) }
         className={ "react-scrollbar__wrapper" + ( this.props.className ? " " + this.props.className : "" ) }
-        ref="scrollWrapper">
+        ref="scrollWrapper"
+        style={this.props.style}
+          >
 
         <div
           className={ "react-scrollbar__area" + ( this.state.dragging ? ' ' : ' react-scrollbar-transition') }
@@ -280,12 +282,14 @@ class ScrollWrapper extends React.Component {
 // The Props
 ScrollWrapper.propTypes = {
   speed: React.PropTypes.number,
-  className: React.PropTypes.string
+  className: React.PropTypes.string,
+  style: React.PropTypes.object
 }
 
 ScrollWrapper.defaultProps = {
   speed: 53,
-  className: ""
+  className: "",
+  style: {  }
 }
 
 export default ScrollWrapper;

@@ -11,14 +11,11 @@ class App extends React.Component {
 
   render(){
     let myScrollbar = {
-      width: '35%',
-      minWidth: 300,
-      maxHeight: 450,
       border: '5px #2196F3 solid'
     }
     return(
-      <ReactScrollbar className="my-scrollbar" style={myScrollbar} ref="Scrollbar">
-        <div className="scroll-me">
+      <ReactScrollbar className="scroll-block" style={myScrollbar}>
+        <div className="scroll-content">
           <div className="kolom" />
           <div className="kolom" />
           <div className="kolom" />

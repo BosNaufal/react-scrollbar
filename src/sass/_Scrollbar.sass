@@ -1,4 +1,4 @@
-
+/* Deprecated! See react-scrollbar.scss instead  */
 
 .react-scrollbar-transition
   transition: all 0.5s ease
@@ -14,10 +14,10 @@
 
 .react-scrollbar
   &__wrapper
-    margin: 0 auto
-    overflow: hidden
-    position: relative
-    background: white
+    margin: 0 auto         //note: moved to external css
+    overflow: hidden:      //note: moved to inline style because can destroy
+    position: relative:    //note: moved to inline style because can destroy
+    background: white      //note: moved to external css
 
     &:hover
       .react-scrollbar
@@ -28,14 +28,14 @@
   &__scrollbar-vertical, &__scrollbar-horizontal
     @extend .react-scrollbar-transition
     opacity: 0.5
-    position: absolute
+    position: absolute      //note: moved to inline style because can destroy
     background: transparent
 
     &:hover
       background: rgba(0,0,0,0.3)
 
     .scrollbar
-      position: relative
+      position: relative      //note: moved to inline style because can destroy
       background: rgba(0,0,0,0.5)
       cursor: default
 

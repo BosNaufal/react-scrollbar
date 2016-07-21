@@ -13,24 +13,23 @@ class VerticalScrollbar extends React.Component {
   }
 
   render(){
-
-    let { height, dragging } = this.state
-    let { draggingFromParent, scrolling } = this.props
-
-    if(height < 100) return(
+    let className = (base,name,pos,act,isAct) => [base+name, base+name+pos, isAct?base+name+act:'', isAct?base+name+pos+act:''].join(' ');
+    if(this.state.height < 100) return(
       <div
-        className="react-scrollbar__scrollbar-vertical"
+        className={className('-reactjs-scrollbar', '-track', ':vertical', ':dragging', this.state.dragging || this.props.draggingFromParent)}
         ref="container"
-        onClick={ this.jump.bind(this) }>
+        onClick={ this.jump.bind(this) }
+        style={{position: 'absolute'}}>
 
         <div
-          className={ "scrollbar" + ( dragging || draggingFromParent ? '' : ' react-scrollbar-transition') }
+          className={className('-reactjs-scrollbar', '-thumb', ':vertical', ':dragging', this.state.dragging || this.props.draggingFromParent)}
           ref="scrollbar"
           onTouchStart={ this.startDrag.bind(this) }
           onMouseDown={ this.startDrag.bind(this) }
           style={{
-            height: height+'%',
-            top: scrolling + '%'
+            position: 'relative',
+            height: this.state.height+'%',
+            top: this.props.scrolling + '%'
           }} />
 
       </div>

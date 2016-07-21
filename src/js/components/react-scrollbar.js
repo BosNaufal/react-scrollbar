@@ -4,7 +4,7 @@ import React from 'react';
 import VerticalScrollbar from './vertical-scrollbar.js';
 import HorizontalScrollbar from './horizontal-scrollbar.js';
 
-require('../../sass/_Scrollbar.sass')
+import '!style!css!sass!./react-scrollbar.scss';
 
 class ScrollWrapper extends React.Component {
 
@@ -29,18 +29,18 @@ class ScrollWrapper extends React.Component {
   }
 
   render(){
+    let className = (base,name,pos,act,isAct) => [base+name, base+name+pos, isAct?base+name+act:'', isAct?base+name+pos+act:''].join(' ');
 
     return(
-
       <div
         onClick={ this.calculateSize.bind(this) }
-        className={ "react-scrollbar__wrapper" + ( this.props.className ? " " + this.props.className : "" ) }
+        className={this.props.className}
         ref="scrollWrapper"
-        style={this.props.style}
+        style={{...this.props.style, overflow: 'hidden', position: 'relative'}}
           >
 
         <div
-          className={ "react-scrollbar__area" + ( this.state.dragging ? ' ' : ' react-scrollbar-transition') }
+          className={className('-reactjs-scrollbar', '-area', '', ':dragging', this.state.dragging)}
           ref="scrollArea"
           onWheel={ this.scroll.bind(this) }
           onTouchStart={ this.startDrag.bind(this) }

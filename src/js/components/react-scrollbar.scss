@@ -12,9 +12,16 @@ $isCorner: false;  //future: -reactjs-scrollbar-corner
 
 .-reactjs-scrollbar {
     &-area {
-        @include transition(all 0.5s ease);
+        //@include transition(all 0.5s ease);
         &\:dragging {
-            @include transition(none);
+            //@include transition(none);
+        }
+        &\:scrolling {
+          @include transition(all 0.5s ease);
+
+          .-reactjs-scrollbar-thumb {
+            @include transition(all 0.5s ease);
+          }
         }
         &:hover {
             .-reactjs-scrollbar-track {
@@ -45,13 +52,13 @@ $isCorner: false;  //future: -reactjs-scrollbar-corner
     }
 
     &-thumb {
-        @include transition(all 0.5s ease);
+        //@include transition(all 0.5s ease);
         background: rgba($color, 0.5);
         cursor: default;
         width: $size;     //note: width of vertical thumb
         height: $size;    //note: height of horizontal thumb
         &\:dragging {
-            @include transition(none);
+            //@include transition(none);
         }
     }
 }

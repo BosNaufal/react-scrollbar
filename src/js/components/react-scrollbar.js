@@ -20,13 +20,31 @@ class ScrollWrapper extends React.Component {
       scrollWrapperWidth: null,
       vMovement: 0,
       hMovement: 0,
-      dragging: false,
+      dragging: false,  //note: dragging - fake pseudo class
+      scrolling: false, //changes: scrolling (new fake pseudo class)
+      reset: false, //changes: change state without rendering
       start: { y: 0, x: 0}
     }
   }
 
+//changes: update scrollbars when parent resizing
+  componentWillReceiveProps(nextProps) {
+      this.calculateSize.bind(this)();
+  }
+
+//changes: reset settings without rerendering (need for scrolling state)
+  shouldComponentUpdate(nextProps, nextState) {
+    if(nextState.reset) {
+      this.setState({reset: false});
+      return false;
+    }
+    return true;
+  }
+
   render(){
-    let className = (base,name,pos,act,isAct) => [base+name, base+name+pos, isAct?base+name+act:'', isAct?base+name+pos+act:''].join(' ');
+    let className = (base,name,pos,isDrg,isScr) => [base+name, base+name+pos,
+                                                    isDrg?base+name+':dragging':'', isDrg?base+name+pos+':dragging':'',
+                                                    isScr?base+name+':scrolling':'', isScr?base+name+pos+':scrolling':''].join(' ');
 
     return(
       <div
@@ -37,7 +55,7 @@ class ScrollWrapper extends React.Component {
           >
 
         <div
-          className={className('-reactjs-scrollbar', '-area', '', ':dragging', this.state.dragging)}
+          className={className('-reactjs-scrollbar', '-area', '', this.state.dragging, this.state.scrolling)}
           ref="scrollArea"
           onWheel={ this.scroll.bind(this) }
           onTouchStart={ this.startDrag.bind(this) }
@@ -107,11 +125,15 @@ class ScrollWrapper extends React.Component {
       let canScrollY = this.state.scrollAreaHeight > this.state.scrollWrapperHeight
       let canScrollX = this.state.scrollAreaWidth > this.state.scrollWrapperWidth
 
-      // Vertical Scrolling
-      if(canScrollY && !shifted) this.normalizeVertical(nextY)
+      //changes: Set scrolling state before changing position
+      this.setState({scrolling:true},()=>{
+        // Vertical Scrolling
+        if(canScrollY && !shifted) this.normalizeVertical(nextY,{scrolling:false, reset:true})
 
-      // Horizontal Scrolling
-      if(shifted && canScrollX) this.normalizeHorizontal(nextX)
+        // Horizontal Scrolling
+        if(shifted && canScrollX) this.normalizeHorizontal(nextX,{scrolling:false, reset:true})
+      });
+
     })
 
   }
@@ -162,17 +184,7 @@ class ScrollWrapper extends React.Component {
     this.setState({ dragging: false })
   }
 
-  scrollToY(y) {
-    this.normalizeVertical(y)
-  }
-
-  scrollToX(x) {
-    this.normalizeVertical(x)
-  }
-
-  normalizeVertical(next){
-    let elementSize = this.getSize()
-
+  normalizeVertical(next,nextState){
     // Vertical Scrolling
     let lowerEnd = elementSize.scrollAreaHeight - elementSize.scrollWrapperHeight
 
@@ -185,13 +197,11 @@ class ScrollWrapper extends React.Component {
     // Update the Vertical Value
     this.setState({
       top: next,
-      vMovement: next / elementSize.scrollAreaHeight * 100
-    })
+      vMovement: next / this.state.scrollAreaHeight * 100,
+    },()=>this.setState({...nextState})); //changes: update state after operation
   }
 
-  normalizeHorizontal(next){
-    let elementSize = this.getSize()
-
+  normalizeHorizontal(next,nextState){
     // Horizontal Scrolling
     let rightEnd = elementSize.scrollAreaWidth - this.state.scrollWrapperWidth
 
@@ -204,8 +214,8 @@ class ScrollWrapper extends React.Component {
     // Update the Horizontal Value
     this.setState({
       left: next,
-      hMovement: next / elementSize.scrollAreaWidth * 100
-    })
+      hMovement: next / this.state.scrollAreaWidth * 100
+    },()=>this.setState({...nextState})); //changes: update state after operation
   }
 
   handleChangePosition(movement, orientation){
@@ -234,7 +244,7 @@ class ScrollWrapper extends React.Component {
     // Get new Elements Size
     let elementSize = {
       // Scroll Area Height and Width
-      scrollAreaHeight: $scrollArea.children[0].clientHeight,
+      scrollAreaHeight: $scrollArea.children[0].clientHeight, //fixme: that's why need to wrap all children in one div
       scrollAreaWidth: $scrollArea.children[0].clientWidth,
 
       // Scroll Wrapper Height and Width

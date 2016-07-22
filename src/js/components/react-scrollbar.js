@@ -239,6 +239,7 @@ class ScrollWrapper extends React.Component {
   }
 
   calculateSize(cb){
+    if(typeof(cb)!='function') cb = null;
     let elementSize = this.getSize()
 
     if( elementSize.scrollWrapperHeight != this.state.scrollWrapperHeight ||

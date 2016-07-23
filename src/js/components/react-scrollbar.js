@@ -242,7 +242,7 @@ class ScrollWrapper extends React.Component {
     let $scrollArea = this.refs.scrollArea
     let $scrollWrapper = this.refs.scrollWrapper
 
-    // Get new Elements Size
+    // Get new Elements Size 
     let elementSize = {
       // Scroll Area Height and Width
       scrollAreaHeight: $scrollArea.getBoundingClientRect().height, //changes: support margin and no one child

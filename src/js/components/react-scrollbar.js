@@ -61,6 +61,7 @@ class ScrollWrapper extends React.Component {
           onTouchStart={ this.startDrag.bind(this) }
           onTouchMove={ this.onDrag.bind(this) }
           onTouchEnd={ this.stopDrag.bind(this) }
+          onChange={ this.calculateSize.bind(this)}
           style={{ marginTop: this.state.top * -1 +'px', marginLeft: this.state.left * -1 +'px' }} >
 
           { this.props.children }
@@ -244,8 +245,8 @@ class ScrollWrapper extends React.Component {
     // Get new Elements Size
     let elementSize = {
       // Scroll Area Height and Width
-      scrollAreaHeight: $scrollArea.children[0].clientHeight, //fixme: that's why need to wrap all children in one div
-      scrollAreaWidth: $scrollArea.children[0].clientWidth,
+      scrollAreaHeight: $scrollArea.getBoundingClientRect().height, //changes: support margin and no one child
+      scrollAreaWidth: $scrollArea.children[0].clientWidth, //fixme: not working same way
 
       // Scroll Wrapper Height and Width
       scrollWrapperHeight: $scrollWrapper.clientHeight,

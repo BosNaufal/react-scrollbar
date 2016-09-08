@@ -64,6 +64,25 @@ Just the ordinary class name for styling the wrapper. So, It's TOTALLY **CUSTOMI
 ##### speed (Number)
 The wheel step in pixel. The default is 53 pixel per wheel.
 
+## Methods
+##### scrollToY(y)
+To scroll the scrollbar to the Y
+```javascript
+// Examples
+someMethod() {
+  this.refs.Scrollbar.scrollToY(100)
+}
+```
+
+##### scrollToX(x)
+To scroll the scrollbar to the X
+```javascript
+// Examples
+someMethod() {
+  this.refs.Scrollbar.scrollToX(100)
+}
+```
+
 ## Thank You for Making this useful~
 
 ## Let's talk about some projects with me

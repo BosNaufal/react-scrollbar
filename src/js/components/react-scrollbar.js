@@ -12,15 +12,12 @@ class ScrollWrapper extends React.Component {
     super();
     this.state = {
       ready: false,
-      scrollY: null,
-      scrollX: null,
       top: 0,
       left: 0,
       scrollAreaHeight: null,
       scrollAreaWidth: null,
       scrollWrapperHeight: null,
       scrollWrapperWidth: null,
-      verticalHeight: null,
       vMovement: 0,
       hMovement: 0,
       dragging: false,
@@ -163,6 +160,14 @@ class ScrollWrapper extends React.Component {
 
   stopDrag(e){
     this.setState({ dragging: false })
+  }
+
+  scrollToY(y) {
+    this.normalizeVertical(y)
+  }
+
+  scrollToX(x) {
+    this.normalizeVertical(x)
   }
 
   normalizeVertical(next){

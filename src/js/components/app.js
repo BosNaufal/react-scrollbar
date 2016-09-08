@@ -16,7 +16,7 @@ class App extends React.Component {
       border: '5px #2196F3 solid'
     }
     return(
-      <ReactScrollbar className="my-scrollbar" style={myScrollbar}>
+      <ReactScrollbar className="my-scrollbar" style={myScrollbar} ref="Scrollbar">
         <div className="scroll-me">
           <div className="kolom" />
           <div className="kolom" />
@@ -39,7 +39,6 @@ class App extends React.Component {
       </ReactScrollbar>
     )
   }
-
 }
 
 

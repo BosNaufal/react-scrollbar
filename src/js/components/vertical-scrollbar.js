@@ -35,6 +35,8 @@ class VerticalScrollbar extends React.Component {
 
       </div>
     )
+
+    else return null
   }
 
 
@@ -127,7 +129,8 @@ class VerticalScrollbar extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.calculateSize()
+    if( nextProps.wrapper.height !== this.props.wrapper.height ||
+        nextProps.area.height !== this.props.area.height ) this.calculateSize(nextProps)
   }
 
   getSize(){

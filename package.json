@@ -1,6 +1,6 @@
 {
   "name": "react-scrollbar-js",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "The Simplest Scroll Area Component with custom scrollbar for React Js",
   "main": "./src/js/components/react-scrollbar.js",
   "scripts": {
@@ -37,6 +37,7 @@
     "babel-preset-react": "^6.5.0",
     "css-loader": "^0.23.1",
     "es6-promise": "^3.1.2",
+    "node-sass": "^3.8.0",
     "sass-loader": "^3.2.0",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.0",

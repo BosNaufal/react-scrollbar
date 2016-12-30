@@ -23,6 +23,13 @@ import ReactDOM from 'react-dom';
 
 import ReactScrollbar from 'react-scrollbar-js';
 
+// Don't Forget to set your webpack configuration file first to handle *.css file
+require('react-scrollbar-js/style/react-scrollbar.css')
+
+// Require Your custom styling. ex: .my-scrollbar
+require('../../style/my-scrollbar.css')
+
+
 class App extends React.Component {
 
   render(){
@@ -59,6 +66,23 @@ Just the ordinary class name for styling the wrapper. So, It's TOTALLY **CUSTOMI
 .scroll-me{
   min-width: 750px;
 }
+```
+
+##### style (Object)
+If you prefer to use inline style to styling the scrollbar, you can pass the styling object to this props.
+```javascript
+let styling = {
+
+  /* Scrollbar */
+  scrollbar: {
+    width: "35%",
+    minWidth: "300px",
+    maxHeight: "450px"
+  },
+
+}
+
+<ReactScrollbar style={ styling.scrollbar } />
 ```
 
 ##### speed (Number)

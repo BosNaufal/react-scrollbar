@@ -2,9 +2,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import ReactScrollbar from './react-scrollbar.js';
+import ReactScrollbar from '../../index.js';
 
-require('../../sass/main.sass')
+require('../../style/react-scrollbar.css')
+require('../../style/app.css')
 
 class App extends React.Component {
 

@@ -242,25 +242,6 @@ class ScrollWrapper extends React.Component {
   }
 
   calculateSize(cb){
-    // The Elements
-    let $scrollArea = this.refs.scrollArea
-    let $scrollWrapper = this.refs.scrollWrapper
-
-    // Get new Elements Size
-    let elementSize = {
-      // Scroll Area Height and Width
-      scrollAreaHeight: $scrollArea.children[0].clientHeight,
-      scrollAreaWidth: $scrollArea.children[0].clientWidth,
-
-      // Scroll Wrapper Height and Width
-      scrollWrapperHeight: $scrollWrapper.clientHeight,
-      scrollWrapperWidth: $scrollWrapper.clientWidth,
-    }
-
-    return elementSize
-  }
-
-  calculateSize(cb){
     if(typeof cb !== 'function') cb = null;
 
     let elementSize = this.getSize()

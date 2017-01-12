@@ -4,6 +4,8 @@ import React from 'react';
 import VerticalScrollbar from './vertical-scrollbar.js';
 import HorizontalScrollbar from './horizontal-scrollbar.js';
 
+import '!style!css!sass!./react-scrollbar.scss';
+
 class ScrollWrapper extends React.Component {
 
   constructor() {
@@ -18,23 +20,42 @@ class ScrollWrapper extends React.Component {
       scrollWrapperWidth: null,
       vMovement: 0,
       hMovement: 0,
-      dragging: false,
+      dragging: false,  //note: dragging - fake pseudo class
+      scrolling: false, //changes: scrolling (new fake pseudo class)
+      reset: false, //changes: change state without rendering
       start: { y: 0, x: 0}
     }
   }
 
+//changes: update scrollbars when parent resizing
+  componentWillReceiveProps(nextProps) {
+      this.calculateSize.bind(this)();
+  }
+
+//changes: reset settings without rerendering (need for scrolling state)
+  shouldComponentUpdate(nextProps, nextState) {
+    if(nextState.reset) {
+      this.setState({reset: false});
+      return false;
+    }
+    return true;
+  }
+
   render(){
+    let className = (base,name,pos,isDrg,isScr) => [base+name, base+name+pos,
+                                                    isDrg?base+name+':dragging':'', isDrg?base+name+pos+':dragging':'',
+                                                    isScr?base+name+':scrolling':'', isScr?base+name+pos+':scrolling':''].join(' ');
 
     return(
-
       <div
         onClick={ this.calculateSize.bind(this) }
-        className={ "react-scrollbar__wrapper" + ( this.props.className ? " " + this.props.className : "" ) }
+        className={this.props.className}
         ref="scrollWrapper"
-        style={this.props.style}>
+        style={{...this.props.style, overflow: 'hidden', position: 'relative'}}
+          >
 
         <div
-          className={ "react-scrollbar__area" + ( this.state.dragging ? ' ' : ' react-scrollbar-transition') }
+          className={className('-reactjs-scrollbar', '-area', '', this.state.dragging, this.state.scrolling)}
           ref="scrollArea"
           onWheel={ this.scroll.bind(this) }
           onTouchStart={ this.startDrag.bind(this) }
@@ -105,11 +126,15 @@ class ScrollWrapper extends React.Component {
       let canScrollY = this.state.scrollAreaHeight > this.state.scrollWrapperHeight
       let canScrollX = this.state.scrollAreaWidth > this.state.scrollWrapperWidth
 
-      // Vertical Scrolling
-      if(canScrollY && !shifted) this.normalizeVertical(nextY)
+      //changes: Set scrolling state before changing position
+      this.setState({scrolling:true},()=>{
+        // Vertical Scrolling
+        if(canScrollY && !shifted) this.normalizeVertical(nextY,{scrolling:false, reset:true})
 
-      // Horizontal Scrolling
-      if(shifted && canScrollX) this.normalizeHorizontal(nextX)
+        // Horizontal Scrolling
+        if(shifted && canScrollX) this.normalizeHorizontal(nextX,{scrolling:false, reset:true})
+      });
+
     })
 
   }

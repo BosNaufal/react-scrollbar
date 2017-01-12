@@ -32,6 +32,8 @@ module.exports = {
     })
   ],
 
+  devtool: 'source-map',
+
   devServer: {
     colors: true,
     historyApiFallback: true,

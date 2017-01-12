@@ -157,9 +157,9 @@ HorizontalScrollbar.propTypes = {
   scrolling: React.PropTypes.number.isRequired,
   wrapper: React.PropTypes.object.isRequired,
   area: React.PropTypes.object.isRequired,
-  onChangePosition: React.PropTypes.function.isRequired,
-  onDragging: React.PropTypes.function.isRequired,
-  onStopDrag: React.PropTypes.function.isRequired
+  onChangePosition: React.PropTypes.func.isRequired,
+  onDragging: React.PropTypes.func.isRequired,
+  onStopDrag: React.PropTypes.func.isRequired
 }
 
 export default HorizontalScrollbar;

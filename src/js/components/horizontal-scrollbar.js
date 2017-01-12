@@ -147,4 +147,16 @@ class HorizontalScrollbar extends React.Component {
 
 }
 
+
+// The Props
+HorizontalScrollbar.propTypes = {
+  draggingFromParent: React.PropTypes.bool.isRequired,
+  scrolling: React.PropTypes.number.isRequired,
+  wrapper: React.PropTypes.object.isRequired,
+  area: React.PropTypes.object.isRequired,
+  onChangePosition: React.PropTypes.function.isRequired,
+  onDragging: React.PropTypes.function.isRequired,
+  onStopDrag: React.PropTypes.function.isRequired
+}
+
 export default HorizontalScrollbar;

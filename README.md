@@ -23,6 +23,13 @@ import ReactDOM from 'react-dom';
 
 import ReactScrollbar from 'react-scrollbar-js';
 
+// Don't Forget to set your webpack configuration file first to handle *.css file
+require('react-scrollbar-js/style/react-scrollbar.css')
+
+// Require Your custom styling. ex: .my-scrollbar
+require('../../style/my-scrollbar.css')
+
+
 class App extends React.Component {
 
   render(){
@@ -61,8 +68,44 @@ Just the ordinary class name for styling the wrapper. So, It's TOTALLY **CUSTOMI
 }
 ```
 
+##### style (Object)
+If you prefer to use inline style to styling the scrollbar, you can pass the styling object to this props.
+```javascript
+let styling = {
+
+  /* Scrollbar */
+  scrollbar: {
+    width: "35%",
+    minWidth: "300px",
+    maxHeight: "450px"
+  },
+
+}
+
+<ReactScrollbar style={ styling.scrollbar } />
+```
+
 ##### speed (Number)
 The wheel step in pixel. The default is 53 pixel per wheel.
+
+## Methods
+##### scrollToY(y)
+To scroll the scrollbar to the Y
+```javascript
+// Examples
+someMethod() {
+  this.refs.Scrollbar.scrollToY(100)
+}
+```
+
+##### scrollToX(x)
+To scroll the scrollbar to the X
+```javascript
+// Examples
+someMethod() {
+  this.refs.Scrollbar.scrollToX(100)
+}
+```
 
 ## Thank You for Making this useful~
 

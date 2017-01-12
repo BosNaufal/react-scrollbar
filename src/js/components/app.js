@@ -2,9 +2,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import ReactScrollbar from './react-scrollbar.js';
+import ReactScrollbar from '../../index.js';
 
-require('../../sass/main.sass')
+require('../../style/react-scrollbar.css')
+require('../../style/app.css')
 
 class App extends React.Component {
 
@@ -16,7 +17,7 @@ class App extends React.Component {
       border: '5px #2196F3 solid'
     }
     return(
-      <ReactScrollbar className="my-scrollbar" style={myScrollbar}>
+      <ReactScrollbar className="my-scrollbar" style={myScrollbar} ref="Scrollbar">
         <div className="scroll-me">
           <div className="kolom" />
           <div className="kolom" />
@@ -39,7 +40,6 @@ class App extends React.Component {
       </ReactScrollbar>
     )
   }
-
 }
 
 

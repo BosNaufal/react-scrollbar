@@ -13,20 +13,24 @@ class VerticalScrollbar extends React.Component {
   }
 
   render(){
-    if(this.state.height < 100) return(
+
+    let { height, dragging } = this.state
+    let { draggingFromParent, scrolling } = this.props
+
+    if(height < 100) return(
       <div
         className="react-scrollbar__scrollbar-vertical"
         ref="container"
         onClick={ this.jump.bind(this) }>
 
         <div
-          className={ "scrollbar" + ( this.state.dragging || this.props.draggingFromParent ? '' : ' react-scrollbar-transition') }
+          className={ "scrollbar" + ( dragging || draggingFromParent ? '' : ' react-scrollbar-transition') }
           ref="scrollbar"
           onTouchStart={ this.startDrag.bind(this) }
           onMouseDown={ this.startDrag.bind(this) }
           style={{
-            height: this.state.height+'%',
-            top: this.props.scrolling + '%'
+            height: height+'%',
+            top: scrolling + '%'
           }} />
 
       </div>
@@ -118,13 +122,31 @@ class VerticalScrollbar extends React.Component {
   }
 
   calculateSize(source){
-    // Scrollbar Height
+    // Scrollbar Width
     this.setState({ height: source.wrapper.height / source.area.height * 100 })
   }
 
   componentWillReceiveProps(nextProps) {
     if( nextProps.wrapper.height !== this.props.wrapper.height ||
         nextProps.area.height !== this.props.area.height ) this.calculateSize(nextProps)
+  }
+
+  getSize(){
+    // The Elements
+    let $scrollArea = this.refs.container.parentElement
+    let $scrollWrapper = $scrollArea.parentElement
+
+    // Get new Elements Size
+    let elementSize = {
+      // Scroll Area Height and Width
+      scrollAreaHeight: $scrollArea.children[0].clientHeight,
+      scrollAreaWidth: $scrollArea.children[0].clientWidth,
+
+      // Scroll Wrapper Height and Width
+      scrollWrapperHeight: $scrollWrapper.clientHeight,
+      scrollWrapperWidth: $scrollWrapper.clientWidth,
+    }
+    return elementSize
   }
 
   componentDidMount() {
@@ -145,6 +167,18 @@ class VerticalScrollbar extends React.Component {
     document.removeEventListener("touchend", this.stopDrag.bind(this))
   }
 
+}
+
+
+// The Props
+VerticalScrollbar.propTypes = {
+  draggingFromParent: React.PropTypes.bool.isRequired,
+  scrolling: React.PropTypes.number.isRequired,
+  wrapper: React.PropTypes.object.isRequired,
+  area: React.PropTypes.object.isRequired,
+  onChangePosition: React.PropTypes.function.isRequired,
+  onDragging: React.PropTypes.function.isRequired,
+  onStopDrag: React.PropTypes.function.isRequired
 }
 
 export default VerticalScrollbar;

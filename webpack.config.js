@@ -18,11 +18,12 @@ module.exports = {
         loader: 'babel'
       },
       {
-        test: /\.sass$/,
-        loaders: ['style','css', 'sass']
+        test: /\.css$/,
+        loaders: ['style','css']
       }
     ]
   },
+
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
@@ -30,12 +31,12 @@ module.exports = {
       }
     })
   ],
+
   devServer: {
-        contentBase: "./build",
-        colors: true,
-        historyApiFallback: true,
-        inline: true,
-        hot: true
-    }
+    colors: true,
+    historyApiFallback: true,
+    inline: true,
+    hot: true
+  }
 
 };

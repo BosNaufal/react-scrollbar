@@ -4,23 +4,18 @@ import React from 'react';
 import VerticalScrollbar from './vertical-scrollbar.js';
 import HorizontalScrollbar from './horizontal-scrollbar.js';
 
-require('../../sass/_Scrollbar.sass')
-
 class ScrollWrapper extends React.Component {
 
   constructor() {
     super();
     this.state = {
       ready: false,
-      scrollY: null,
-      scrollX: null,
       top: 0,
       left: 0,
       scrollAreaHeight: null,
       scrollAreaWidth: null,
       scrollWrapperHeight: null,
       scrollWrapperWidth: null,
-      verticalHeight: null,
       vMovement: 0,
       hMovement: 0,
       dragging: false,
@@ -36,8 +31,7 @@ class ScrollWrapper extends React.Component {
         onClick={ this.calculateSize.bind(this) }
         className={ "react-scrollbar__wrapper" + ( this.props.className ? " " + this.props.className : "" ) }
         ref="scrollWrapper"
-        style={this.props.style}
-          >
+        style={this.props.style}>
 
         <div
           className={ "react-scrollbar__area" + ( this.state.dragging ? ' ' : ' react-scrollbar-transition') }
@@ -139,18 +133,17 @@ class ScrollWrapper extends React.Component {
   }
 
   onDrag(e){
-
     if(this.state.dragging){
 
       e.preventDefault()
       e = e.changedTouches ? e.changedTouches[0] : e
 
       // Invers the Movement
-      let yMovement = this.state.start.y - e.pageY
-      let xMovement = this.state.start.x - e.pageX
+      let yMovement = this.state.start.y - e.clientY
+      let xMovement = this.state.start.x - e.clientX
 
-      // Update the last e.page
-      this.setState({ start: { y: e.pageY, x: e.pageX } })
+      // Update the last e.client
+      this.setState({ start: { y: e.clientY, x: e.clientX } })
 
       // The next Vertical Value will be
       let nextY = this.state.top + yMovement
@@ -167,10 +160,19 @@ class ScrollWrapper extends React.Component {
     this.setState({ dragging: false })
   }
 
+  scrollToY(y) {
+    this.normalizeVertical(y)
+  }
+
+  scrollToX(x) {
+    this.normalizeVertical(x)
+  }
+
   normalizeVertical(next){
+    let elementSize = this.getSize()
 
     // Vertical Scrolling
-    let lowerEnd = this.state.scrollAreaHeight - this.state.scrollWrapperHeight
+    let lowerEnd = elementSize.scrollAreaHeight - elementSize.scrollWrapperHeight
 
     // Max Scroll Down
     if(next > lowerEnd) next = lowerEnd
@@ -181,13 +183,15 @@ class ScrollWrapper extends React.Component {
     // Update the Vertical Value
     this.setState({
       top: next,
-      vMovement: next / this.state.scrollAreaHeight * 100
+      vMovement: next / elementSize.scrollAreaHeight * 100
     })
   }
 
   normalizeHorizontal(next){
+    let elementSize = this.getSize()
+
     // Horizontal Scrolling
-    let rightEnd = this.state.scrollAreaWidth - this.state.scrollWrapperWidth
+    let rightEnd = elementSize.scrollAreaWidth - this.state.scrollWrapperWidth
 
     // Max Scroll Right
     if(next > rightEnd) next = rightEnd;
@@ -198,7 +202,7 @@ class ScrollWrapper extends React.Component {
     // Update the Horizontal Value
     this.setState({
       left: next,
-      hMovement: next / this.state.scrollAreaWidth * 100
+      hMovement: next / elementSize.scrollAreaWidth * 100
     })
   }
 
@@ -235,12 +239,12 @@ class ScrollWrapper extends React.Component {
       scrollWrapperHeight: $scrollWrapper.clientHeight,
       scrollWrapperWidth: $scrollWrapper.clientWidth,
     }
-
     return elementSize
   }
 
-  calculateSize(cb){ //todo: check performance
-    if(typeof(cb)!='function') cb = null;
+  calculateSize(cb){
+    if(typeof cb !== 'function') cb = null;
+
     let elementSize = this.getSize()
 
     if( elementSize.scrollWrapperHeight != this.state.scrollWrapperHeight ||
@@ -249,7 +253,7 @@ class ScrollWrapper extends React.Component {
         elementSize.scrollAreaWidth != this.state.scrollAreaWidth )
     {
       // Set the State!
-      this.setState({
+      return this.setState({
 
         // Scroll Area Height and Width
         scrollAreaHeight: elementSize.scrollAreaHeight,

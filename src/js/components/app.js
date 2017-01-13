@@ -4,13 +4,15 @@ import ReactDOM from 'react-dom';
 
 import ReactScrollbar from '../../index.js';
 
-require('../../style/react-scrollbar.css')
-require('../../style/app.css')
+require('../../sass/main.sass')
 
 class App extends React.Component {
 
   render(){
     let myScrollbar = {
+      width: '60%',
+      minWidth: 300,
+      maxHeight: 450,
       border: '5px #2196F3 solid'
     }
     return(

@@ -4,7 +4,7 @@ import React from 'react';
 import VerticalScrollbar from './vertical-scrollbar.js';
 import HorizontalScrollbar from './horizontal-scrollbar.js';
 
-import '!style!css!sass!./react-scrollbar.scss';
+import './react-scrollbar.scss';
 
 class ScrollWrapper extends React.Component {
 

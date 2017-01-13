@@ -1,44 +1,42 @@
-
+var path = require('path');
 var webpack = require('webpack');
 require('es6-promise').polyfill();
 
 module.exports = {
 
-  entry: __dirname + '/src/js/components/app.js',
+  entry: './src/js/components/app.js',
 
   output: {
-    path: __dirname + '/build',
+    path: '/build',
     filename: 'build.js'
   },
 
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
-        loader: 'babel'
+        loader: 'babel-loader'
       },
       {
         test: /\.css$/,
-        loaders: ['style','css']
+        loaders: ['style-loader','css-loader']
+      },
+      {
+        test: /\.s[a|c]ss$/,
+        loaders: ['style-loader','css-loader','sass-loader']
       }
     ]
   },
 
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        'NODE_ENV': '"production"'
-      }
-    })
-  ],
-
   devtool: 'source-map',
 
+
   devServer: {
-    colors: true,
-    historyApiFallback: true,
-    inline: true,
-    hot: true
+    contentBase: path.join(__dirname, "public"),
+    publicPath: "/build/",
+    clientLogLevel: "none",
+//    inline: true,
+//    hot: true
   }
 
 };

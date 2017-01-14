@@ -1,14 +1,19 @@
 var path = require('path');
-var webpack = require('webpack');
-require('es6-promise').polyfill();
 
-module.exports = {
+module.exports =
+{
 
-  entry: './src/js/components/app.js',
+  entry: './src',
 
   output: {
-    path: '/build',
-    filename: 'build.js'
+    path: './dist',
+    filename: 'react-scrollbar.js',
+    library: 'react-scrollbar',
+    libraryTarget:'umd'
+  },
+
+  externals : {
+    react: 'react'
   },
 
   module: {
@@ -28,11 +33,18 @@ module.exports = {
     ]
   },
 
+  resolve: {
+    extensions: [".js", ".jsx", "scss", "css"],
+    alias: {
+      'react-scrollbar-js': path.resolve(__dirname, 'src/'),
+    }
+  },
+
   devtool: 'source-map',
 
 
   devServer: {
-    contentBase: path.join(__dirname, "public"),
+    contentBase: path.resolve(__dirname, 'example/public'),
     publicPath: "/build/",
     clientLogLevel: "none",
 //    inline: true,

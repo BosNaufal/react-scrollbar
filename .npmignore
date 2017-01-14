@@ -1,0 +1,6 @@
+/doc
+/example
+/src
+.babelrc
+webpack.dev.config.js
+webpack.publish.config.js

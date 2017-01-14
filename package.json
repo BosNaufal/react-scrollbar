@@ -2,11 +2,11 @@
   "name": "react-scrollbar-js",
   "version": "0.0.10",
   "description": "The Simplest Scroll Area Component with custom scrollbar for React Js",
-  "main": "./src/index.js",
+  "main": "./dist/react-scrollbar.js",
   "scripts": {
-    "prepublish": "babel src --out-dir dist",
+    "prepublish": "webpack --config webpack.publish.config.js",
     "dev": "webpack-dev-server --inline --hot",
-    "start": "webpack-dev-server --inline --hot",
+    "start": "webpack-dev-server --inline --hot --config webpack.dev.config.js",
     "build": "webpack -p"
   },
   "repository": {

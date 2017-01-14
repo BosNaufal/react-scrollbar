@@ -4,7 +4,7 @@ import React from 'react';
 import VerticalScrollbar from './vertical-scrollbar.js';
 import HorizontalScrollbar from './horizontal-scrollbar.js';
 
-import './react-scrollbar.scss';
+import './style_default.scss';
 
 class ScrollWrapper extends React.Component {
 
@@ -12,12 +12,15 @@ class ScrollWrapper extends React.Component {
     super();
     this.state = {
       ready: false,
+      scrollY: null,
+      scrollX: null,
       top: 0,
       left: 0,
       scrollAreaHeight: null,
       scrollAreaWidth: null,
       scrollWrapperHeight: null,
       scrollWrapperWidth: null,
+      verticalHeight: null,
       vMovement: 0,
       hMovement: 0,
       dragging: false,  //note: dragging - fake pseudo class
@@ -42,9 +45,14 @@ class ScrollWrapper extends React.Component {
   }
 
   render(){
-    let className = (base,name,pos,isDrg,isScr) => [base+name, base+name+pos,
-                                                    isDrg?base+name+':dragging':'', isDrg?base+name+pos+':dragging':'',
-                                                    isScr?base+name+':scrolling':'', isScr?base+name+pos+':scrolling':''].join(' ');
+    let className = (base,name,pos,isDrg,isScr) => [
+      base + name,
+      base + name + pos,
+      isDrg ? base + name + ':dragging' : '',
+      isDrg ? base + name + pos + ':dragging' : '',
+      isScr?base+name+':scrolling':'',
+      isScr?base+name+pos+':scrolling':''
+    ].join(' ');
 
     return(
       <div
@@ -185,9 +193,19 @@ class ScrollWrapper extends React.Component {
     this.setState({ dragging: false })
   }
 
+  scrollToY(y) {
+    this.normalizeVertical(y)
+  }
+
+  scrollToX(x) {
+    this.normalizeVertical(x)
+  }
+
+
   normalizeVertical(next,nextState){
+    // let elementSize = this.getSize()
     // Vertical Scrolling
-    let lowerEnd = elementSize.scrollAreaHeight - elementSize.scrollWrapperHeight
+    let lowerEnd = this.state.scrollAreaHeight - this.state.scrollWrapperHeight
 
     // Max Scroll Down
     if(next > lowerEnd) next = lowerEnd
@@ -204,7 +222,7 @@ class ScrollWrapper extends React.Component {
 
   normalizeHorizontal(next,nextState){
     // Horizontal Scrolling
-    let rightEnd = elementSize.scrollAreaWidth - this.state.scrollWrapperWidth
+    let rightEnd = this.state.scrollAreaWidth - this.state.scrollWrapperWidth
 
     // Max Scroll Right
     if(next > rightEnd) next = rightEnd;
@@ -242,9 +260,10 @@ class ScrollWrapper extends React.Component {
     let $scrollArea = this.refs.scrollArea
     let $scrollWrapper = this.refs.scrollWrapper
 
-    // Get new Elements Size 
+    // Get new Elements Size
     let elementSize = {
       // Scroll Area Height and Width
+
       scrollAreaHeight: $scrollArea.getBoundingClientRect().height, //changes: support margin and no one child
       scrollAreaWidth: $scrollArea.children[0].clientWidth, //fixme: not working same way
 
@@ -252,6 +271,7 @@ class ScrollWrapper extends React.Component {
       scrollWrapperHeight: $scrollWrapper.clientHeight,
       scrollWrapperWidth: $scrollWrapper.clientWidth,
     }
+
     return elementSize
   }
 
@@ -266,7 +286,7 @@ class ScrollWrapper extends React.Component {
         elementSize.scrollAreaWidth != this.state.scrollAreaWidth )
     {
       // Set the State!
-      return this.setState({
+      this.setState({
 
         // Scroll Area Height and Width
         scrollAreaHeight: elementSize.scrollAreaHeight,

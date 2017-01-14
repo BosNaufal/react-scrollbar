@@ -1,8 +1,6 @@
 $color: black;
 $size: 10px;
 
-$isCorner: false;  //future: -reactjs-scrollbar-corner
-
 @mixin transition($param...) {
     transition: $param;
     -moz-transition: $param;
@@ -12,9 +10,7 @@ $isCorner: false;  //future: -reactjs-scrollbar-corner
 
 .-reactjs-scrollbar {
     &-area {
-        //@include transition(all 0.5s ease);
         &\:dragging {
-            //@include transition(none);
         }
         &\:scrolling {
           @include transition(all 0.5s ease);
@@ -30,7 +26,7 @@ $isCorner: false;  //future: -reactjs-scrollbar-corner
         }
     }
 
-    &-track { /*future: .-reactjs-scrollbar */
+    &-track { 
         @include transition(all 0.5s ease);
         opacity: 0.5;
         background: rgba($color, 0);
@@ -52,13 +48,12 @@ $isCorner: false;  //future: -reactjs-scrollbar-corner
     }
 
     &-thumb {
-        //@include transition(all 0.5s ease);
         background: rgba($color, 0.5);
         cursor: default;
         width: $size;     //note: width of vertical thumb
         height: $size;    //note: height of horizontal thumb
         &\:dragging {
-            //@include transition(none);
+        
         }
     }
 }

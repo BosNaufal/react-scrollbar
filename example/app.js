@@ -2,9 +2,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import ReactScrollbar from '../../index.js';
+import ReactScrollbar from 'react-scrollbar-js';
 
-require('../../sass/main.sass')
+require('./main.sass')
 
 class App extends React.Component {
 
@@ -15,6 +15,7 @@ class App extends React.Component {
       maxHeight: 450,
       border: '5px #2196F3 solid'
     }
+
     return(
       <ReactScrollbar className="scroll-block" style={myScrollbar}>
         <div className="scroll-content">

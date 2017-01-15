@@ -1,48 +1,51 @@
-var path = require('path');
+const path = require('path');
 
 module.exports =
 {
 
-  entry: './example/app.js',
+  entry: './develop/app.js',
 
   output: {
     path: '/dist',
-    filename: 'react-scrollbar.js'
+    filename: 'react-scrollbar.js',
   },
 
   module: {
     rules: [
       {
-        test: /\.js$/,
-        loader: 'babel-loader'
+        test: /\.jsx?$/,
+        loader: 'babel-loader',
       },
       {
         test: /\.css$/,
-        loaders: ['style-loader','css-loader']
+        loaders: ['style-loader', 'css-loader'],
       },
       {
         test: /\.s[a|c]ss$/,
-        loaders: ['style-loader','css-loader','sass-loader']
-      }
-    ]
+        loaders: ['style-loader', 'css-loader', 'sass-loader'],
+      },
+    ],
   },
 
   resolve: {
-    extensions: [".js", ".jsx", "scss", "css", "*"],
+    extensions: ['.js', '.jsx', '.scss', '.css', '*'],
     alias: {
       'react-scrollbar-js': path.resolve(__dirname, 'src/'),
-    }
+    },
   },
 
   devtool: 'source-map',
 
 
   devServer: {
-    contentBase: path.resolve(__dirname, 'example/public'),
-    publicPath: "/build/",
-    clientLogLevel: "none",
-//    inline: true,
-//    hot: true
-  }
+    contentBase: path.resolve(__dirname, 'develop/public'),
+    publicPath: '/build/',
+    clientLogLevel: 'none',
+
+/** in webpack CLI
+    inline: true,
+    hot: true
+    */
+  },
 
 };

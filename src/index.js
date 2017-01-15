@@ -1,3 +1,3 @@
-import ReactScrollbar from './react-scrollbar.js'
+import ReactScrollbar from './react-scrollbar';
 
 export default ReactScrollbar;

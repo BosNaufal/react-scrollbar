@@ -4,10 +4,13 @@
   "description": "The Simplest Scroll Area Component with custom scrollbar for React Js",
   "main": "./dist/react-scrollbar.js",
   "scripts": {
-    "prepublish": "webpack --config webpack.publish.config.js",
-    "dev": "webpack-dev-server --inline --hot",
+    "prepublish": "npm run lint && npm run build",
     "start": "webpack-dev-server --inline --hot --config webpack.dev.config.js",
-    "build": "webpack -p"
+    "build": "webpack --config webpack.publish.config.js",
+    "compile": "babel src --out-dir out && node-sass src --output out",
+    "lint": "eslint src --ext .jsx,.js",
+    "lintfix": "eslint src --ext .jsx,.js --fix",
+    "test": "echo AAA && echo BBB"
   },
   "repository": {
     "type": "git",
@@ -35,12 +38,19 @@
   "homepage": "https://github.com/BosNaufal/react-scrollbar#readme",
   "devDependencies": {
     "babel-cli": "^6.18.0",
+    "babel-eslint": "^7.1.1",
     "babel-loader": "^6.2.10",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-2": "^6.18.0",
     "css-loader": "^0.26.1",
     "es6-promise": "^4.0.5",
+    "eslint": "^3.13.1",
+    "eslint-config-airbnb": "^14.0.0",
+    "eslint-plugin-babel": "^4.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^3.0.2",
+    "eslint-plugin-react": "^6.9.0",
     "node-sass": "^4.3.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",

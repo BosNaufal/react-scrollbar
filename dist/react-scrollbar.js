@@ -129,32 +129,53 @@ var ScrollWrapper = function (_React$Component) {
 
     _this.state = {
       ready: false,
+      scrollY: null,
+      scrollX: null,
       top: 0,
       left: 0,
       scrollAreaHeight: null,
       scrollAreaWidth: null,
       scrollWrapperHeight: null,
       scrollWrapperWidth: null,
+      verticalHeight: null,
       vMovement: 0,
       hMovement: 0,
-      dragging: false, //note: dragging - fake pseudo class
-      scrolling: false, //changes: scrolling (new fake pseudo class)
-      reset: false, //changes: change state without rendering
+      dragging: false, // note: dragging - fake pseudo class
+      scrolling: false, // changes: scrolling (new fake pseudo class)
+      reset: false, // changes: change state without rendering
       start: { y: 0, x: 0 }
     };
+
+    _this.updateSize = _this.updateSize.bind(_this);
+    _this.calculateSize = _this.calculateSize.bind(_this);
+    _this.scroll = _this.scroll.bind(_this);
+    _this.startDrag = _this.startDrag.bind(_this);
+    _this.onDrag = _this.onDrag.bind(_this);
+    _this.stopDrag = _this.stopDrag.bind(_this);
+    _this.handleChangePosition = _this.handleChangePosition.bind(_this);
+    _this.handleScrollbarDragging = _this.handleScrollbarDragging.bind(_this);
+    _this.handleScrollbarStopDrag = _this.handleScrollbarStopDrag.bind(_this);
     return _this;
   }
 
-  //changes: update scrollbars when parent resizing
-
-
   _createClass(ScrollWrapper, [{
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(nextProps) {
-      this.calculateSize.bind(this)();
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.calculateSize();
+
+      // Attach The Event for Responsive View~
+      window.addEventListener('resize', this.updateSize);
     }
 
-    //changes: reset settings without rerendering (need for scrolling state)
+    // changes: update scrollbars when parent resizing
+
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps() {
+      this.calculateSize();
+    }
+
+    // changes: reset settings without rerendering (need for scrolling state)
 
   }, {
     key: 'shouldComponentUpdate',
@@ -166,118 +187,17 @@ var ScrollWrapper = function (_React$Component) {
       return true;
     }
   }, {
-    key: 'render',
-    value: function render() {
-      var className = function className(base, name, pos, isDrg, isScr) {
-        return [base + name, base + name + pos, isDrg ? base + name + ':dragging' : '', isDrg ? base + name + pos + ':dragging' : '', isScr ? base + name + ':scrolling' : '', isScr ? base + name + pos + ':scrolling' : ''].join(' ');
-      };
-
-      return _react2.default.createElement(
-        'div',
-        {
-          onClick: this.calculateSize.bind(this),
-          className: this.props.className,
-          ref: 'scrollWrapper',
-          style: _extends({}, this.props.style, { overflow: 'hidden', position: 'relative' })
-        },
-        _react2.default.createElement(
-          'div',
-          {
-            className: className('-reactjs-scrollbar', '-area', '', this.state.dragging, this.state.scrolling),
-            ref: 'scrollArea',
-            onWheel: this.scroll.bind(this),
-            onTouchStart: this.startDrag.bind(this),
-            onTouchMove: this.onDrag.bind(this),
-            onTouchEnd: this.stopDrag.bind(this),
-            onChange: this.calculateSize.bind(this),
-            style: { marginTop: this.state.top * -1 + 'px', marginLeft: this.state.left * -1 + 'px' } },
-          this.props.children,
-          this.state.ready ? _react2.default.createElement(_verticalScrollbar2.default, {
-            area: { height: this.state.scrollAreaHeight },
-            wrapper: { height: this.state.scrollWrapperHeight },
-            scrolling: this.state.vMovement,
-            draggingFromParent: this.state.dragging,
-            onChangePosition: this.handleChangePosition.bind(this),
-            onDragging: this.handleScrollbarDragging.bind(this),
-            onStopDrag: this.handleScrollbarStopDrag.bind(this) }) : null,
-          this.state.ready ? _react2.default.createElement(_horizontalScrollbar2.default, {
-            area: { width: this.state.scrollAreaWidth },
-            wrapper: { width: this.state.scrollWrapperWidth },
-            scrolling: this.state.hMovement,
-            draggingFromParent: this.state.dragging,
-            onChangePosition: this.handleChangePosition.bind(this),
-            onDragging: this.handleScrollbarDragging.bind(this),
-            onStopDrag: this.handleScrollbarStopDrag.bind(this) }) : null
-        )
-      );
-    }
-  }, {
-    key: 'scroll',
-    value: function scroll(e) {
-      var _this2 = this;
-
-      e.preventDefault();
-
-      // Make sure the content height is not changed
-      this.calculateSize(function () {
-        // Set the wheel step
-        var num = _this2.props.speed;
-
-        // DOM events
-        var shifted = e.shiftKey;
-        var scrollY = e.deltaY > 0 ? num : -num;
-        var scrollX = e.deltaX > 0 ? num : -num;
-
-        // Fix Mozilla Shifted Wheel~
-        if (shifted && e.deltaX == 0) scrollX = e.deltaY > 0 ? num : -num;
-
-        // Next Value
-        var nextY = _this2.state.top + scrollY;
-        var nextX = _this2.state.left + scrollX;
-
-        // Is it Scrollable?
-        var canScrollY = _this2.state.scrollAreaHeight > _this2.state.scrollWrapperHeight;
-        var canScrollX = _this2.state.scrollAreaWidth > _this2.state.scrollWrapperWidth;
-
-        //changes: Set scrolling state before changing position
-        _this2.setState({ scrolling: true }, function () {
-          // Vertical Scrolling
-          if (canScrollY && !shifted) _this2.normalizeVertical(nextY, { scrolling: false, reset: true });
-
-          // Horizontal Scrolling
-          if (shifted && canScrollX) _this2.normalizeHorizontal(nextX, { scrolling: false, reset: true });
-        });
-      });
-    }
-
-    // DRAG EVENT JUST FOR TOUCH DEVICE~
-
-  }, {
-    key: 'startDrag',
-    value: function startDrag(e) {
-      var _this3 = this;
-
-      e.preventDefault();
-      e.stopPropagation();
-
-      e = e.changedTouches ? e.changedTouches[0] : e;
-
-      // Make sure the content height is not changed
-      this.calculateSize(function () {
-        // Prepare to drag
-        _this3.setState({
-          dragging: true,
-          start: { y: e.pageY, x: e.pageX }
-        });
-      });
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      // Remove Event
+      window.removeEventListener('resize', this.updateSize);
     }
   }, {
     key: 'onDrag',
-    value: function onDrag(e) {
+    value: function onDrag(event) {
       if (this.state.dragging) {
-
-        e.preventDefault();
-        e = e.changedTouches ? e.changedTouches[0] : e;
+        event.preventDefault();
+        var e = event.changedTouches ? event.changedTouches[0] : event;
 
         // Invers the Movement
         var yMovement = this.state.start.y - e.clientY;
@@ -295,8 +215,30 @@ var ScrollWrapper = function (_React$Component) {
       }
     }
   }, {
+    key: 'getSize',
+    value: function getSize() {
+      // The Elements
+      var $scrollArea = this.scrollArea;
+      var $scrollWrapper = this.scrollWrapper;
+
+      // Get new Elements Size
+      var elementSize = {
+        // Scroll Area Height and Width
+
+        // changes: support margin and no one child
+        scrollAreaHeight: $scrollArea.getBoundingClientRect().height,
+        scrollAreaWidth: $scrollArea.children[0].clientWidth, // fixme: not working same way
+
+        // Scroll Wrapper Height and Width
+        scrollWrapperHeight: $scrollWrapper.clientHeight,
+        scrollWrapperWidth: $scrollWrapper.clientWidth
+      };
+
+      return elementSize;
+    }
+  }, {
     key: 'stopDrag',
-    value: function stopDrag(e) {
+    value: function stopDrag() {
       this.setState({ dragging: false });
     }
   }, {
@@ -311,43 +253,53 @@ var ScrollWrapper = function (_React$Component) {
     }
   }, {
     key: 'normalizeVertical',
-    value: function normalizeVertical(next) {
-      var elementSize = this.getSize();
+    value: function normalizeVertical(nextPos, nextState) {
+      var _this2 = this;
 
       // Vertical Scrolling
-      var lowerEnd = elementSize.scrollAreaHeight - elementSize.scrollWrapperHeight;
+      var lowerEnd = this.state.scrollAreaHeight - this.state.scrollWrapperHeight;
 
       // Max Scroll Down
-      if (next > lowerEnd) next = lowerEnd;
-
       // Max Scroll Up
-      else if (next < 0) next = 0;
+      var trim = function trim(max, min, val) {
+        var tmax = val > max ? max : val;
+        var tmin = tmax < min ? min : tmax;
+        return tmin;
+      };
+      var next = trim(lowerEnd, 0, nextPos);
 
       // Update the Vertical Value
       this.setState({
         top: next,
-        vMovement: next / elementSize.scrollAreaHeight * 100
-      });
+        vMovement: next / this.state.scrollAreaHeight * 100
+      }, function () {
+        return _this2.setState(_extends({}, nextState));
+      }); // changes: update state after operation
     }
   }, {
     key: 'normalizeHorizontal',
-    value: function normalizeHorizontal(next) {
-      var elementSize = this.getSize();
+    value: function normalizeHorizontal(nextPos, nextState) {
+      var _this3 = this;
 
       // Horizontal Scrolling
-      var rightEnd = elementSize.scrollAreaWidth - this.state.scrollWrapperWidth;
+      var rightEnd = this.state.scrollAreaWidth - this.state.scrollWrapperWidth;
 
       // Max Scroll Right
-      if (next > rightEnd) next = rightEnd;
-
       // Max Scroll Right
-      else if (next < 0) next = 0;
+      var trim = function trim(max, min, val) {
+        var tmax = val > max ? max : val;
+        var tmin = tmax < min ? min : tmax;
+        return tmin;
+      };
+      var next = trim(rightEnd, 0, nextPos);
 
       // Update the Horizontal Value
       this.setState({
         left: next,
-        hMovement: next / elementSize.scrollAreaWidth * 100
-      });
+        hMovement: next / this.state.scrollAreaWidth * 100
+      }, function () {
+        return _this3.setState(_extends({}, nextState));
+      }); // changes: update state after operation
     }
   }, {
     key: 'handleChangePosition',
@@ -358,8 +310,8 @@ var ScrollWrapper = function (_React$Component) {
       this.calculateSize(function () {
         // Convert Percentage to Pixel
         var next = movement / 100;
-        if (orientation == 'vertical') _this4.normalizeVertical(next * _this4.state.scrollAreaHeight);
-        if (orientation == 'horizontal') _this4.normalizeHorizontal(next * _this4.state.scrollAreaWidth);
+        if (orientation === 'vertical') _this4.normalizeVertical(next * _this4.state.scrollAreaHeight);
+        if (orientation === 'horizontal') _this4.normalizeHorizontal(next * _this4.state.scrollAreaWidth);
       });
     }
   }, {
@@ -373,34 +325,13 @@ var ScrollWrapper = function (_React$Component) {
       this.setState({ dragging: false });
     }
   }, {
-    key: 'getSize',
-    value: function getSize() {
-      // The Elements
-      var $scrollArea = this.refs.scrollArea;
-      var $scrollWrapper = this.refs.scrollWrapper;
-
-      // Get new Elements Size
-      var elementSize = {
-        // Scroll Area Height and Width
-        scrollAreaHeight: $scrollArea.getBoundingClientRect().height, //changes: support margin and no one child
-        scrollAreaWidth: $scrollArea.children[0].clientWidth, //fixme: not working same way
-
-        // Scroll Wrapper Height and Width
-        scrollWrapperHeight: $scrollWrapper.clientHeight,
-        scrollWrapperWidth: $scrollWrapper.clientWidth
-      };
-      return elementSize;
-    }
-  }, {
-    key: 'calculateSize',
-    value: function calculateSize(cb) {
-      if (typeof cb !== 'function') cb = null;
-
+    key: 'updateSize',
+    value: function updateSize() {
       var elementSize = this.getSize();
 
-      if (elementSize.scrollWrapperHeight != this.state.scrollWrapperHeight || elementSize.scrollWrapperWidth != this.state.scrollWrapperWidth || elementSize.scrollAreaHeight != this.state.scrollAreaHeight || elementSize.scrollAreaWidth != this.state.scrollAreaWidth) {
+      if (elementSize.scrollWrapperHeight !== this.state.scrollWrapperHeight || elementSize.scrollWrapperWidth !== this.state.scrollWrapperWidth || elementSize.scrollAreaHeight !== this.state.scrollAreaHeight || elementSize.scrollAreaWidth !== this.state.scrollAreaWidth) {
         // Set the State!
-        return this.setState({
+        this.setState({
 
           // Scroll Area Height and Width
           scrollAreaHeight: elementSize.scrollAreaHeight,
@@ -412,24 +343,148 @@ var ScrollWrapper = function (_React$Component) {
 
           // Make sure The wrapper is Ready, then render the scrollbar
           ready: true
-        }, function () {
-          return cb ? cb() : false;
         });
-      } else return cb ? cb() : false;
+      }
     }
   }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      this.calculateSize();
+    key: 'calculateSize',
+    value: function calculateSize(cb) {
+      var elementSize = this.getSize();
 
-      // Attach The Event for Responsive View~
-      window.addEventListener('resize', this.calculateSize.bind(this));
+      if (elementSize.scrollWrapperHeight !== this.state.scrollWrapperHeight || elementSize.scrollWrapperWidth !== this.state.scrollWrapperWidth || elementSize.scrollAreaHeight !== this.state.scrollAreaHeight || elementSize.scrollAreaWidth !== this.state.scrollAreaWidth) {
+        // Set the State!
+        this.setState({
+          // Scroll Area Height and Width
+          scrollAreaHeight: elementSize.scrollAreaHeight,
+          scrollAreaWidth: elementSize.scrollAreaWidth,
+
+          // Scroll Wrapper Height and Width
+          scrollWrapperHeight: elementSize.scrollWrapperHeight,
+          scrollWrapperWidth: elementSize.scrollWrapperWidth,
+
+          // Make sure The wrapper is Ready, then render the scrollbar
+          ready: true
+        }, cb);
+      } else cb();
+    }
+
+    // DRAG EVENT JUST FOR TOUCH DEVICE~
+
+  }, {
+    key: 'startDrag',
+    value: function startDrag(event) {
+      var _this5 = this;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      var e = event.changedTouches ? event.changedTouches[0] : event;
+
+      // Make sure the content height is not changed
+      this.calculateSize(function () {
+        // Prepare to drag
+        _this5.setState({
+          dragging: true,
+          start: { y: e.pageY, x: e.pageX }
+        });
+      });
     }
   }, {
-    key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      // Remove Event
-      window.removeEventListener('resize', this.calculateSize.bind(this));
+    key: 'scroll',
+    value: function scroll(e) {
+      var _this6 = this;
+
+      e.preventDefault();
+
+      // Make sure the content height is not changed
+      this.calculateSize(function () {
+        // Set the wheel step
+        var num = _this6.props.speed;
+
+        // DOM events
+        var shifted = e.shiftKey;
+        var scrollY = e.deltaY > 0 ? num : -num;
+        var scrollX = e.deltaX > 0 ? num : -num;
+
+        // Fix Mozilla Shifted Wheel~
+        if (shifted && e.deltaX === 0) scrollX = e.deltaY > 0 ? num : -num;
+
+        // Next Value
+        var nextY = _this6.state.top + scrollY;
+        var nextX = _this6.state.left + scrollX;
+
+        // Is it Scrollable?
+        var canScrollY = _this6.state.scrollAreaHeight > _this6.state.scrollWrapperHeight;
+        var canScrollX = _this6.state.scrollAreaWidth > _this6.state.scrollWrapperWidth;
+
+        // changes: Set scrolling state before changing position
+        _this6.setState({ scrolling: true }, function () {
+          // Vertical Scrolling
+          if (canScrollY && !shifted) {
+            _this6.normalizeVertical(nextY, { scrolling: false, reset: true });
+          }
+
+          // Horizontal Scrolling
+          if (shifted && canScrollX) {
+            _this6.normalizeHorizontal(nextX, { scrolling: false, reset: true });
+          }
+        });
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this7 = this;
+
+      var className = function className(base, name, pos, isDrg, isScr) {
+        return [base + name, base + name + pos, isDrg ? base + name + ':dragging' : '', isDrg ? base + name + pos + ':dragging' : '', isScr ? base + name + ':scrolling' : '', isScr ? base + name + pos + ':scrolling' : ''].join(' ');
+      };
+
+      return _react2.default.createElement(
+        'div',
+        {
+          onClick: this.updateSize,
+          className: this.props.className,
+          ref: function ref(c) {
+            _this7.scrollWrapper = c;
+          },
+          style: _extends({}, this.props.style, { overflow: 'hidden', position: 'relative' })
+        },
+        _react2.default.createElement(
+          'div',
+          {
+            className: className('-reactjs-scrollbar', '-area', '', this.state.dragging, this.state.scrolling),
+            ref: function ref(c) {
+              _this7.scrollArea = c;
+            },
+            onWheel: this.scroll,
+            onTouchStart: this.startDrag,
+            onTouchMove: this.onDrag,
+            onTouchEnd: this.stopDrag,
+            onChange: this.updateSize,
+            style: { marginTop: this.state.top * -1 + 'px', marginLeft: this.state.left * -1 + 'px' }
+          },
+          this.props.children,
+          this.state.ready ? _react2.default.createElement(_verticalScrollbar2.default, {
+            area: { height: this.state.scrollAreaHeight },
+            wrapper: { height: this.state.scrollWrapperHeight },
+            scrolling: this.state.vMovement,
+            draggingFromParent: this.state.dragging,
+            onChangePosition: this.handleChangePosition,
+            onDragging: this.handleScrollbarDragging,
+            onStopDrag: this.handleScrollbarStopDrag
+          }) : null,
+          this.state.ready ? _react2.default.createElement(_horizontalScrollbar2.default, {
+            area: { width: this.state.scrollAreaWidth },
+            wrapper: { width: this.state.scrollWrapperWidth },
+            scrolling: this.state.hMovement,
+            draggingFromParent: this.state.dragging,
+            onChangePosition: this.handleChangePosition,
+            onDragging: this.handleScrollbarDragging,
+            onStopDrag: this.handleScrollbarStopDrag
+          }) : null
+        )
+      );
     }
   }]);
 
@@ -442,13 +497,15 @@ var ScrollWrapper = function (_React$Component) {
 ScrollWrapper.propTypes = {
   speed: _react2.default.PropTypes.number,
   className: _react2.default.PropTypes.string,
-  style: _react2.default.PropTypes.object
+  style: _react2.default.PropTypes.shape(),
+  children: _react2.default.PropTypes.node
 };
 
 ScrollWrapper.defaultProps = {
   speed: 53,
-  className: "",
-  style: {}
+  className: '',
+  style: {},
+  children: null
 };
 
 exports.default = ScrollWrapper;
@@ -547,71 +604,57 @@ var HorizontalScrollbar = function (_React$Component) {
       dragging: false,
       start: 0
     };
+
+    _this.jump = _this.jump.bind(_this);
+    _this.startDrag = _this.startDrag.bind(_this);
     return _this;
   }
 
   _createClass(HorizontalScrollbar, [{
-    key: 'render',
-    value: function render() {
-      var className = function className(base, name, pos, act, isAct) {
-        return [base + name, base + name + pos, isAct ? base + name + act : '', isAct ? base + name + pos + act : ''].join(' ');
-      };
-      if (this.state.width < 100) return _react2.default.createElement(
-        'div',
-        {
-          className: className('-reactjs-scrollbar', '-track', ':horizontal', ':dragging', this.state.dragging || this.props.draggingFromParent),
-          ref: 'container',
-          onClick: this.jump.bind(this),
-          style: { position: 'absolute' } },
-        _react2.default.createElement('div', {
-          className: className('-reactjs-scrollbar', '-thumb', ':horizontal', ':dragging', this.state.dragging || this.props.draggingFromParent),
-          ref: 'scrollbar',
-          onTouchStart: this.startDrag.bind(this),
-          onMouseDown: this.startDrag.bind(this),
-          style: {
-            position: 'relative',
-            width: this.state.width + '%',
-            left: this.props.scrolling + '%'
-          } })
-      );else return null;
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.calculateSize(this.props);
+
+      // Put the Listener
+      document.addEventListener('mousemove', this.onDrag.bind(this));
+      document.addEventListener('touchmove', this.onDrag.bind(this));
+      document.addEventListener('mouseup', this.stopDrag.bind(this));
+      document.addEventListener('touchend', this.stopDrag.bind(this));
     }
   }, {
-    key: 'startDrag',
-    value: function startDrag(e) {
-
-      e.preventDefault();
-      e.stopPropagation();
-
-      e = e.changedTouches ? e.changedTouches[0] : e;
-
-      // Prepare to drag
-      this.setState({
-        dragging: true,
-        start: e.clientX
-      });
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      if (nextProps.wrapper.width !== this.props.wrapper.width || nextProps.area.width !== this.props.area.width) this.calculateSize(nextProps);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      // Remove the Listener
+      document.removeEventListener('mousemove', this.onDrag.bind(this));
+      document.removeEventListener('touchmove', this.onDrag.bind(this));
+      document.removeEventListener('mouseup', this.stopDrag.bind(this));
+      document.removeEventListener('touchend', this.stopDrag.bind(this));
     }
   }, {
     key: 'onDrag',
-    value: function onDrag(e) {
+    value: function onDrag(event) {
       var _this2 = this;
 
       if (this.state.dragging) {
         (function () {
-
           // Make The Parent being in the Dragging State
           _this2.props.onDragging();
 
-          e.preventDefault();
-          e.stopPropagation();
+          event.preventDefault();
+          event.stopPropagation();
 
-          e = e.changedTouches ? e.changedTouches[0] : e;
+          var e = event.changedTouches ? event.changedTouches[0] : event;
 
           var xMovement = e.clientX - _this2.state.start;
           var xMovementPercentage = xMovement / _this2.props.wrapper.width * 100;
 
           // Update the last e.clientX
           _this2.setState({ start: e.clientX }, function () {
-
             // The next Horizontal Value will be
             var next = _this2.props.scrolling + xMovementPercentage;
 
@@ -622,8 +665,22 @@ var HorizontalScrollbar = function (_React$Component) {
       }
     }
   }, {
+    key: 'startDrag',
+    value: function startDrag(event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      var e = event.changedTouches ? event.changedTouches[0] : event;
+
+      // Prepare to drag
+      this.setState({
+        dragging: true,
+        start: e.clientX
+      });
+    }
+  }, {
     key: 'stopDrag',
-    value: function stopDrag(e) {
+    value: function stopDrag() {
       if (this.state.dragging) {
         // Parent Should Change the Dragging State
         this.props.onStopDrag();
@@ -635,13 +692,12 @@ var HorizontalScrollbar = function (_React$Component) {
     value: function jump(e) {
       var _this3 = this;
 
-      var isContainer = e.target === this.refs.container;
+      var isContainer = e.target === this.container;
 
       if (isContainer) {
         (function () {
-
           // Get the Element Position
-          var position = _this3.refs.scrollbar.getBoundingClientRect();
+          var position = _this3.scrollbar.getBoundingClientRect();
 
           // Calculate the horizontal Movement
           var xMovement = e.clientX - position.left;
@@ -650,7 +706,6 @@ var HorizontalScrollbar = function (_React$Component) {
 
           // Update the last e.clientX
           _this3.setState({ start: e.clientX }, function () {
-
             // The next Horizontal Value will be
             var next = _this3.props.scrolling + xMovementPercentage;
 
@@ -667,29 +722,41 @@ var HorizontalScrollbar = function (_React$Component) {
       this.setState({ width: source.wrapper.width / source.area.width * 100 });
     }
   }, {
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(nextProps) {
-      if (nextProps.wrapper.width !== this.props.wrapper.width || nextProps.area.width !== this.props.area.width) this.calculateSize(nextProps);
-    }
-  }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      this.calculateSize(this.props);
+    key: 'render',
+    value: function render() {
+      var _this4 = this;
 
-      // Put the Listener
-      document.addEventListener("mousemove", this.onDrag.bind(this));
-      document.addEventListener("touchmove", this.onDrag.bind(this));
-      document.addEventListener("mouseup", this.stopDrag.bind(this));
-      document.addEventListener("touchend", this.stopDrag.bind(this));
-    }
-  }, {
-    key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      // Remove the Listener
-      document.removeEventListener("mousemove", this.onDrag.bind(this));
-      document.removeEventListener("touchmove", this.onDrag.bind(this));
-      document.removeEventListener("mouseup", this.stopDrag.bind(this));
-      document.removeEventListener("touchend", this.stopDrag.bind(this));
+      var className = function className(base, name, pos, act, isAct) {
+        return [base + name, base + name + pos, isAct ? base + name + act : '', isAct ? base + name + pos + act : ''].join(' ');
+      };
+
+      if (this.state.width < 100) {
+        return _react2.default.createElement(
+          'div',
+          {
+            className: className('-reactjs-scrollbar', '-track', ':horizontal', ':dragging', this.state.dragging || this.props.draggingFromParent),
+            ref: function ref(c) {
+              _this4.container = c;
+            },
+            onClick: this.jump,
+            style: { position: 'absolute' }
+          },
+          _react2.default.createElement('div', {
+            className: className('-reactjs-scrollbar', '-thumb', ':horizontal', ':dragging', this.state.dragging || this.props.draggingFromParent),
+            ref: function ref(c) {
+              _this4.scrollbar = c;
+            },
+            onTouchStart: this.startDrag,
+            onMouseDown: this.startDrag,
+            style: {
+              position: 'relative',
+              width: this.state.width + '%',
+              left: this.props.scrolling + '%'
+            }
+          })
+        );
+      }
+      return null;
     }
   }]);
 
@@ -702,8 +769,8 @@ var HorizontalScrollbar = function (_React$Component) {
 HorizontalScrollbar.propTypes = {
   draggingFromParent: _react2.default.PropTypes.bool.isRequired,
   scrolling: _react2.default.PropTypes.number.isRequired,
-  wrapper: _react2.default.PropTypes.object.isRequired,
-  area: _react2.default.PropTypes.object.isRequired,
+  wrapper: _react2.default.PropTypes.shape().isRequired,
+  area: _react2.default.PropTypes.shape().isRequired,
   onChangePosition: _react2.default.PropTypes.func.isRequired,
   onDragging: _react2.default.PropTypes.func.isRequired,
   onStopDrag: _react2.default.PropTypes.func.isRequired
@@ -749,71 +816,57 @@ var VerticalScrollbar = function (_React$Component) {
       dragging: false,
       start: 0
     };
+
+    _this.jump = _this.jump.bind(_this);
+    _this.startDrag = _this.startDrag.bind(_this);
     return _this;
   }
 
   _createClass(VerticalScrollbar, [{
-    key: 'render',
-    value: function render() {
-      var className = function className(base, name, pos, act, isAct) {
-        return [base + name, base + name + pos, isAct ? base + name + act : '', isAct ? base + name + pos + act : ''].join(' ');
-      };
-      if (this.state.height < 100) return _react2.default.createElement(
-        'div',
-        {
-          className: className('-reactjs-scrollbar', '-track', ':vertical', ':dragging', this.state.dragging || this.props.draggingFromParent),
-          ref: 'container',
-          onClick: this.jump.bind(this),
-          style: { position: 'absolute' } },
-        _react2.default.createElement('div', {
-          className: className('-reactjs-scrollbar', '-thumb', ':vertical', ':dragging', this.state.dragging || this.props.draggingFromParent),
-          ref: 'scrollbar',
-          onTouchStart: this.startDrag.bind(this),
-          onMouseDown: this.startDrag.bind(this),
-          style: {
-            position: 'relative',
-            height: this.state.height + '%',
-            top: this.props.scrolling + '%'
-          } })
-      );else return null;
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.calculateSize(this.props);
+
+      // Put the Listener
+      document.addEventListener('mousemove', this.onDrag.bind(this));
+      document.addEventListener('touchmove', this.onDrag.bind(this));
+      document.addEventListener('mouseup', this.stopDrag.bind(this));
+      document.addEventListener('touchend', this.stopDrag.bind(this));
     }
   }, {
-    key: 'startDrag',
-    value: function startDrag(e) {
-
-      e.preventDefault();
-      e.stopPropagation();
-
-      e = e.changedTouches ? e.changedTouches[0] : e;
-
-      // Prepare to drag
-      this.setState({
-        dragging: true,
-        start: e.clientY
-      });
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      if (nextProps.wrapper.height !== this.props.wrapper.height || nextProps.area.height !== this.props.area.height) this.calculateSize(nextProps);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      // Remove the Listener
+      document.removeEventListener('mousemove', this.onDrag.bind(this));
+      document.removeEventListener('touchmove', this.onDrag.bind(this));
+      document.removeEventListener('mouseup', this.stopDrag.bind(this));
+      document.removeEventListener('touchend', this.stopDrag.bind(this));
     }
   }, {
     key: 'onDrag',
-    value: function onDrag(e) {
+    value: function onDrag(event) {
       var _this2 = this;
 
       if (this.state.dragging) {
         (function () {
-
           // Make The Parent being in the Dragging State
           _this2.props.onDragging();
 
-          e.preventDefault();
-          e.stopPropagation();
+          event.preventDefault();
+          event.stopPropagation();
 
-          e = e.changedTouches ? e.changedTouches[0] : e;
+          var e = event.changedTouches ? event.changedTouches[0] : event;
 
           var yMovement = e.clientY - _this2.state.start;
           var yMovementPercentage = yMovement / _this2.props.wrapper.height * 100;
 
           // Update the last e.clientY
           _this2.setState({ start: e.clientY }, function () {
-
             // The next Vertical Value will be
             var next = _this2.props.scrolling + yMovementPercentage;
 
@@ -824,8 +877,41 @@ var VerticalScrollbar = function (_React$Component) {
       }
     }
   }, {
+    key: 'getSize',
+    value: function getSize() {
+      // The Elements
+      var $scrollArea = this.container.parentElement;
+      var $scrollWrapper = $scrollArea.parentElement;
+
+      // Get new Elements Size
+      var elementSize = {
+        // Scroll Area Height and Width
+        scrollAreaHeight: $scrollArea.children[0].clientHeight,
+        scrollAreaWidth: $scrollArea.children[0].clientWidth,
+
+        // Scroll Wrapper Height and Width
+        scrollWrapperHeight: $scrollWrapper.clientHeight,
+        scrollWrapperWidth: $scrollWrapper.clientWidth
+      };
+      return elementSize;
+    }
+  }, {
+    key: 'startDrag',
+    value: function startDrag(event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      var e = event.changedTouches ? event.changedTouches[0] : event;
+
+      // Prepare to drag
+      this.setState({
+        dragging: true,
+        start: e.clientY
+      });
+    }
+  }, {
     key: 'stopDrag',
-    value: function stopDrag(e) {
+    value: function stopDrag() {
       if (this.state.dragging) {
         // Parent Should Change the Dragging State
         this.props.onStopDrag();
@@ -837,13 +923,12 @@ var VerticalScrollbar = function (_React$Component) {
     value: function jump(e) {
       var _this3 = this;
 
-      var isContainer = e.target === this.refs.container;
+      var isContainer = e.target === this.container;
 
       if (isContainer) {
         (function () {
-
           // Get the Element Position
-          var position = _this3.refs.scrollbar.getBoundingClientRect();
+          var position = _this3.scrollbar.getBoundingClientRect();
 
           // Calculate the vertical Movement
           var yMovement = e.clientY - position.top;
@@ -852,7 +937,6 @@ var VerticalScrollbar = function (_React$Component) {
 
           // Update the last e.clientY
           _this3.setState({ start: e.clientY }, function () {
-
             // The next Vertical Value will be
             var next = _this3.props.scrolling + yMovementPercentage;
 
@@ -869,48 +953,41 @@ var VerticalScrollbar = function (_React$Component) {
       this.setState({ height: source.wrapper.height / source.area.height * 100 });
     }
   }, {
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(nextProps) {
-      if (nextProps.wrapper.height !== this.props.wrapper.height || nextProps.area.height !== this.props.area.height) this.calculateSize(nextProps);
-    }
-  }, {
-    key: 'getSize',
-    value: function getSize() {
-      // The Elements
-      var $scrollArea = this.refs.container.parentElement;
-      var $scrollWrapper = $scrollArea.parentElement;
+    key: 'render',
+    value: function render() {
+      var _this4 = this;
 
-      // Get new Elements Size
-      var elementSize = {
-        // Scroll Area Height and Width
-        scrollAreaHeight: $scrollArea.children[0].clientHeight,
-        scrollAreaWidth: $scrollArea.children[0].clientWidth,
-
-        // Scroll Wrapper Height and Width
-        scrollWrapperHeight: $scrollWrapper.clientHeight,
-        scrollWrapperWidth: $scrollWrapper.clientWidth
+      var className = function className(base, name, pos, act, isAct) {
+        return [base + name, base + name + pos, isAct ? base + name + act : '', isAct ? base + name + pos + act : ''].join(' ');
       };
-      return elementSize;
-    }
-  }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      this.calculateSize(this.props);
 
-      // Put the Listener
-      document.addEventListener("mousemove", this.onDrag.bind(this));
-      document.addEventListener("touchmove", this.onDrag.bind(this));
-      document.addEventListener("mouseup", this.stopDrag.bind(this));
-      document.addEventListener("touchend", this.stopDrag.bind(this));
-    }
-  }, {
-    key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      // Remove the Listener
-      document.removeEventListener("mousemove", this.onDrag.bind(this));
-      document.removeEventListener("touchmove", this.onDrag.bind(this));
-      document.removeEventListener("mouseup", this.stopDrag.bind(this));
-      document.removeEventListener("touchend", this.stopDrag.bind(this));
+      if (this.state.height < 100) {
+        return _react2.default.createElement(
+          'div',
+          {
+            className: className('-reactjs-scrollbar', '-track', ':vertical', ':dragging', this.state.dragging || this.props.draggingFromParent),
+            ref: function ref(c) {
+              _this4.container = c;
+            },
+            onClick: this.jump,
+            style: { position: 'absolute' }
+          },
+          _react2.default.createElement('div', {
+            className: className('-reactjs-scrollbar', '-thumb', ':vertical', ':dragging', this.state.dragging || this.props.draggingFromParent),
+            ref: function ref(c) {
+              _this4.scrollbar = c;
+            },
+            onTouchStart: this.startDrag,
+            onMouseDown: this.startDrag,
+            style: {
+              position: 'relative',
+              height: this.state.height + '%',
+              top: this.props.scrolling + '%'
+            }
+          })
+        );
+      }
+      return null;
     }
   }]);
 
@@ -923,8 +1000,8 @@ var VerticalScrollbar = function (_React$Component) {
 VerticalScrollbar.propTypes = {
   draggingFromParent: _react2.default.PropTypes.bool.isRequired,
   scrolling: _react2.default.PropTypes.number.isRequired,
-  wrapper: _react2.default.PropTypes.object.isRequired,
-  area: _react2.default.PropTypes.object.isRequired,
+  wrapper: _react2.default.PropTypes.shape().isRequired,
+  area: _react2.default.PropTypes.shape().isRequired,
   onChangePosition: _react2.default.PropTypes.func.isRequired,
   onDragging: _react2.default.PropTypes.func.isRequired,
   onStopDrag: _react2.default.PropTypes.func.isRequired
@@ -941,7 +1018,7 @@ exports = module.exports = __webpack_require__(2)();
 
 
 // module
-exports.push([module.i, ".-reactjs-scrollbar-area\\:scrolling {\n  transition: all 0.5s ease;\n  -moz-transition: all 0.5s ease;\n  -webkit-transition: all 0.5s ease;\n  -o-transition: all 0.5s ease; }\n  .-reactjs-scrollbar-area\\:scrolling .-reactjs-scrollbar-thumb {\n    transition: all 0.5s ease;\n    -moz-transition: all 0.5s ease;\n    -webkit-transition: all 0.5s ease;\n    -o-transition: all 0.5s ease; }\n\n.-reactjs-scrollbar-area:hover .-reactjs-scrollbar-track {\n  opacity: 1; }\n\n.-reactjs-scrollbar-track {\n  /*future: .-reactjs-scrollbar */\n  transition: all 0.5s ease;\n  -moz-transition: all 0.5s ease;\n  -webkit-transition: all 0.5s ease;\n  -o-transition: all 0.5s ease;\n  opacity: 0.5;\n  background: transparent; }\n  .-reactjs-scrollbar-track:hover {\n    background: rgba(0, 0, 0, 0.3); }\n  .-reactjs-scrollbar-track\\:vertical {\n    width: 10px;\n    height: 100%;\n    top: 0;\n    right: 0; }\n  .-reactjs-scrollbar-track\\:horizontal {\n    height: 10px;\n    width: 100%;\n    bottom: 0;\n    right: 0; }\n\n.-reactjs-scrollbar-thumb {\n  background: rgba(0, 0, 0, 0.5);\n  cursor: default;\n  width: 10px;\n  height: 10px; }\n", ""]);
+exports.push([module.i, ".-reactjs-scrollbar-area\\:scrolling {\n  transition: all 0.5s ease;\n  -moz-transition: all 0.5s ease;\n  -webkit-transition: all 0.5s ease;\n  -o-transition: all 0.5s ease; }\n  .-reactjs-scrollbar-area\\:scrolling .-reactjs-scrollbar-thumb {\n    transition: all 0.5s ease;\n    -moz-transition: all 0.5s ease;\n    -webkit-transition: all 0.5s ease;\n    -o-transition: all 0.5s ease; }\n\n.-reactjs-scrollbar-area:hover .-reactjs-scrollbar-track {\n  opacity: 1; }\n\n.-reactjs-scrollbar-track {\n  transition: all 0.5s ease;\n  -moz-transition: all 0.5s ease;\n  -webkit-transition: all 0.5s ease;\n  -o-transition: all 0.5s ease;\n  opacity: 0.5;\n  background: transparent; }\n  .-reactjs-scrollbar-track:hover {\n    background: rgba(0, 0, 0, 0.3); }\n  .-reactjs-scrollbar-track\\:vertical {\n    width: 10px;\n    height: 100%;\n    top: 0;\n    right: 0; }\n  .-reactjs-scrollbar-track\\:horizontal {\n    height: 10px;\n    width: 100%;\n    bottom: 0;\n    right: 0; }\n\n.-reactjs-scrollbar-thumb {\n  background: rgba(0, 0, 0, 0.5);\n  cursor: default;\n  width: 10px;\n  height: 10px; }\n", ""]);
 
 // exports
 

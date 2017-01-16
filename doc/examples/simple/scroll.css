@@ -1,0 +1,58 @@
+.-reactjs-scrollbar-area\:scrolling {
+/*
+  transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+*/
+}
+
+.-reactjs-scrollbar-area\:scrolling .-reactjs-scrollbar-thumb {
+/*
+  transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+*/
+}
+
+.-reactjs-scrollbar-area:hover .-reactjs-scrollbar-track {
+  opacity: 1;
+}
+
+.-reactjs-scrollbar-track {
+  /*future: .-reactjs-scrollbar */
+/*
+  transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+*/
+  opacity: 0.5;
+  background: ##0089ff;
+}
+
+.-reactjs-scrollbar-track:hover {
+  background: rgba(198, 12, 176, 0.65);
+}
+
+.-reactjs-scrollbar-track\:vertical {
+  width: 10px;
+  height: 100%;
+  top: 0;
+  right: 0;
+}
+
+.-reactjs-scrollbar-track\:horizontal {
+  height: 10px;
+  width: 100%;
+  bottom: 0;
+  right: 0;
+}
+
+.-reactjs-scrollbar-thumb {
+  background: rgba(255, 0, 0, 0.74);
+  cursor: default;
+  width: 10px;
+  height: 10px;
+}

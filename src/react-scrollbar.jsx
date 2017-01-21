@@ -40,7 +40,7 @@ class ScrollWrapper extends React.Component {
   }
 
   componentDidMount() {
-    this.calculateSize();
+    this.updateSize();
 
     // Attach The Event for Responsive View~
     window.addEventListener('resize', this.updateSize);
@@ -48,7 +48,7 @@ class ScrollWrapper extends React.Component {
 
 // changes: update scrollbars when parent resizing
   componentWillReceiveProps() {
-    this.calculateSize();
+    this.updateSize();
   }
 
 // changes: reset settings without rerendering (need for scrolling state)
@@ -112,12 +112,32 @@ class ScrollWrapper extends React.Component {
     this.setState({ dragging: false });
   }
 
-  scrollToY(y) {
-    this.normalizeVertical(y);
+  scrollToY(pos) {
+    const maxVal = this.state.scrollAreaHeight - this.state.scrollWrapperHeight;
+    let val = pos;
+    if (typeof pos === 'string') {
+      const valK = parseInt(pos.match(/-?[\d]*%$/)[0], 10) / 100;
+      val = valK * maxVal;
+    }
+
+    if (val < 0) {
+      val = maxVal + val;
+    }
+    this.normalizeVertical(val);
   }
 
-  scrollToX(x) {
-    this.normalizeVertical(x);
+  scrollToX(pos) {
+    const maxVal = this.state.scrollAreaWidth - this.state.scrollWrapperWidth;
+    let val = pos;
+    if (typeof pos === 'string') {
+      const valK = parseInt(pos.match(/-?[\d]*%$/)[0], 10) / 100;
+      val = valK * maxVal;
+    }
+
+    if (val < 0) {
+      val = maxVal + val;
+    }
+    this.normalizeHorizontal(val);
   }
 
 

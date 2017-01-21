@@ -382,7 +382,7 @@ ScrollWrapper.propTypes = {
 
 ScrollWrapper.defaultProps = {
   speed: 53,
-  className: '',
+  className: 'react-scrollbar-default',
   style: { },
   children: null,
 };

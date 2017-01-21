@@ -1,0 +1,67 @@
+$color: #e8e8e8;
+$thumbcolor: #8bb4c9;
+$size: 13px;
+
+@mixin transition($param...) {
+    transition: $param;
+    -moz-transition: $param;
+    -webkit-transition: $param;
+    -o-transition: $param;
+}
+
+.style3 .-reactjs-scrollbar {
+    &-area {
+        &\:dragging {
+        }
+        &\:scrolling {
+            @include transition(all 0.3s ease);
+
+            .-reactjs-scrollbar-thumb {
+                @include transition(all 0.3s ease);
+            }
+
+        }
+        &:hover {
+            .-reactjs-scrollbar-thumb {
+                background: rgba($thumbcolor, 1);
+            }
+        }
+    }
+
+    &-track {
+        @include transition(all 0.3s ease);
+        opacity: 1;
+        background: rgba($color, 1);
+        
+        &\:vertical {
+            width: $size;
+            height: 100%;
+            top: 0;
+            left: 0;
+            border-right: black solid 1px;
+//            border-right: black solid 3px;
+        }
+        &\:horizontal {
+            height: $size;
+            width: 100%;
+            bottom: 0;
+            right: 0;
+        }
+        &\:dragging {
+            background: rgba($color, 1);
+        }
+    }
+
+    &-thumb {
+        background: rgba($thumbcolor, 0.5);
+        cursor: default;
+        border-radius: 4px;
+        box-shadow: 0px 0px 4px 0px;
+        left: 2px;
+        width: 8px;     //note: width of vertical thumb
+        height: $size;    //note: height of horizontal thumb
+        &\:dragging {
+          background: rgba($thumbcolor, 1);
+        }
+    }
+}

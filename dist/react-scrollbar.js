@@ -523,7 +523,7 @@ ScrollWrapper.propTypes = {
 
 ScrollWrapper.defaultProps = {
   speed: 53,
-  className: '',
+  className: 'react-scrollbar-default',
   style: {},
   children: null
 };
@@ -1038,7 +1038,7 @@ exports = module.exports = __webpack_require__(2)();
 
 
 // module
-exports.push([module.i, ".-reactjs-scrollbar-area\\:scrolling {\n  transition: all 0.5s ease;\n  -moz-transition: all 0.5s ease;\n  -webkit-transition: all 0.5s ease;\n  -o-transition: all 0.5s ease; }\n  .-reactjs-scrollbar-area\\:scrolling .-reactjs-scrollbar-thumb {\n    transition: all 0.5s ease;\n    -moz-transition: all 0.5s ease;\n    -webkit-transition: all 0.5s ease;\n    -o-transition: all 0.5s ease; }\n\n.-reactjs-scrollbar-area:hover .-reactjs-scrollbar-track {\n  opacity: 1; }\n\n.-reactjs-scrollbar-track {\n  transition: all 0.5s ease;\n  -moz-transition: all 0.5s ease;\n  -webkit-transition: all 0.5s ease;\n  -o-transition: all 0.5s ease;\n  opacity: 0.5;\n  background: transparent; }\n  .-reactjs-scrollbar-track:hover {\n    background: rgba(0, 0, 0, 0.3); }\n  .-reactjs-scrollbar-track\\:vertical {\n    width: 10px;\n    height: 100%;\n    top: 0;\n    right: 0; }\n  .-reactjs-scrollbar-track\\:horizontal {\n    height: 10px;\n    width: 100%;\n    bottom: 0;\n    right: 0; }\n\n.-reactjs-scrollbar-thumb {\n  background: rgba(0, 0, 0, 0.5);\n  cursor: default;\n  width: 10px;\n  height: 10px; }\n", ""]);
+exports.push([module.i, ".react-scrollbar-default .-reactjs-scrollbar-area\\:scrolling {\n  transition: all 0.5s ease;\n  -moz-transition: all 0.5s ease;\n  -webkit-transition: all 0.5s ease;\n  -o-transition: all 0.5s ease; }\n  .react-scrollbar-default .-reactjs-scrollbar-area\\:scrolling .-reactjs-scrollbar-thumb {\n    transition: all 0.5s ease;\n    -moz-transition: all 0.5s ease;\n    -webkit-transition: all 0.5s ease;\n    -o-transition: all 0.5s ease; }\n\n.react-scrollbar-default .-reactjs-scrollbar-area:hover .-reactjs-scrollbar-track {\n  opacity: 1; }\n\n.react-scrollbar-default .-reactjs-scrollbar-track {\n  transition: all 0.5s ease;\n  -moz-transition: all 0.5s ease;\n  -webkit-transition: all 0.5s ease;\n  -o-transition: all 0.5s ease;\n  opacity: 0.5;\n  background: transparent; }\n  .react-scrollbar-default .-reactjs-scrollbar-track:hover {\n    background: rgba(0, 0, 0, 0.3); }\n  .react-scrollbar-default .-reactjs-scrollbar-track\\:vertical {\n    width: 10px;\n    height: 100%;\n    top: 0;\n    right: 0; }\n  .react-scrollbar-default .-reactjs-scrollbar-track\\:horizontal {\n    height: 10px;\n    width: 100%;\n    bottom: 0;\n    right: 0; }\n\n.react-scrollbar-default .-reactjs-scrollbar-thumb {\n  background: rgba(0, 0, 0, 0.5);\n  cursor: default;\n  width: 10px;\n  height: 10px; }\n", ""]);
 
 // exports
 

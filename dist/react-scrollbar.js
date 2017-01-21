@@ -161,7 +161,7 @@ var ScrollWrapper = function (_React$Component) {
   _createClass(ScrollWrapper, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      this.calculateSize();
+      this.updateSize();
 
       // Attach The Event for Responsive View~
       window.addEventListener('resize', this.updateSize);
@@ -172,7 +172,7 @@ var ScrollWrapper = function (_React$Component) {
   }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps() {
-      this.calculateSize();
+      this.updateSize();
     }
 
     // changes: reset settings without rerendering (need for scrolling state)
@@ -243,13 +243,33 @@ var ScrollWrapper = function (_React$Component) {
     }
   }, {
     key: 'scrollToY',
-    value: function scrollToY(y) {
-      this.normalizeVertical(y);
+    value: function scrollToY(pos) {
+      var maxVal = this.state.scrollAreaHeight - this.state.scrollWrapperHeight;
+      var val = pos;
+      if (typeof pos === 'string') {
+        var valK = parseInt(pos.match(/-?[\d]*%$/)[0], 10) / 100;
+        val = valK * maxVal;
+      }
+
+      if (val < 0) {
+        val = maxVal + val;
+      }
+      this.normalizeVertical(val);
     }
   }, {
     key: 'scrollToX',
-    value: function scrollToX(x) {
-      this.normalizeVertical(x);
+    value: function scrollToX(pos) {
+      var maxVal = this.state.scrollAreaWidth - this.state.scrollWrapperWidth;
+      var val = pos;
+      if (typeof pos === 'string') {
+        var valK = parseInt(pos.match(/-?[\d]*%$/)[0], 10) / 100;
+        val = valK * maxVal;
+      }
+
+      if (val < 0) {
+        val = maxVal + val;
+      }
+      this.normalizeHorizontal(val);
     }
   }, {
     key: 'normalizeVertical',

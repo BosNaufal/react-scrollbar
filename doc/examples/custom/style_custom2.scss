@@ -1,5 +1,5 @@
-$color: black;
-$size: 10px;
+$color: #2f2f2f;
+$size: 14px;
 
 @mixin transition($param...) {
     transition: $param;
@@ -8,7 +8,7 @@ $size: 10px;
     -o-transition: $param;
 }
 
-.react-scrollbar-default .-reactjs-scrollbar {
+.style2 .-reactjs-scrollbar {
     &-area {
         &\:dragging {
         }
@@ -21,20 +21,24 @@ $size: 10px;
         }
         &:hover {
             .-reactjs-scrollbar-track {
-                opacity: 1;
+                width: $size;
             }
         }
     }
 
-    &-track { 
+    &-track {
         @include transition(all 0.5s ease);
         opacity: 0.5;
-        background: rgba($color, 0);
+        background: rgba($color, 0.3);
         &:hover {
             background: rgba($color, 0.3);
+          
+          .-reactjs-scrollbar-thumb {
+            background: rgba($color, 0.8);
+          }
         }
         &\:vertical {
-            width: $size;
+            width: 0;
             height: 100%;
             top: 0;
             right: 0;
@@ -48,12 +52,13 @@ $size: 10px;
     }
 
     &-thumb {
+        @include transition(background 0.5s ease);
         background: rgba($color, 0.5);
         cursor: default;
         width: $size;     //note: width of vertical thumb
         height: $size;    //note: height of horizontal thumb
         &\:dragging {
-        
+            background: rgba($color, 0.8);
         }
     }
 }

@@ -106,5 +106,7 @@ class App extends React.Component {
 
 ReactDOM.render(<App />, document.getElementById('app'));
 
-// todo: check -reactjs-scrollbar-area:scrolling
-// todo: remove fixed in tracks
+// todo: [] check -reactjs-scrollbar-area:scrolling
+// todo: [] remove fixed in tracks
+// todo: [] revert .gitignore before PR
+// todo: [] setup dependencies in example projects after publishing to NPM

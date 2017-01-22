@@ -3,7 +3,7 @@ const path = require('path');
 module.exports =
 {
 
-  entry: './develop/app.js',
+  entry: './develop/app.jsx',
 
   output: {
     path: '/dist',

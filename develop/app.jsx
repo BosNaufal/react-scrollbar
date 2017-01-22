@@ -1,23 +1,23 @@
-
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom'; // eslint-disable-line
 
-import ReactScrollbar from 'react-scrollbar-js';
+// eslint-disable-next-line
+import ReactScrollbar from 'react-scrollbar-js'; // (see webpack.dev.config.js)
 
-require('./main.sass')
+require('./main.sass');
 
 class App extends React.Component {
 
-  render(){
-    let myScrollbar = {
+  render() {
+    const myScrollbar = {
       width: '60%',
       minWidth: 300,
       maxHeight: 450,
-      border: '5px #2196F3 solid'
-    }
+      border: '5px #2196F3 solid',
+    };
 
-    return(
-      <ReactScrollbar className="scroll-block" style={myScrollbar}>
+    return (
+      <ReactScrollbar style={myScrollbar}>
         <div className="scroll-content">
           <div className="kolom" />
           <div className="kolom" />
@@ -38,9 +38,9 @@ class App extends React.Component {
           <div className="clearfix" />
         </div>
       </ReactScrollbar>
-    )
+    );
   }
 }
 
 
-ReactDOM.render(<App />, document.getElementById("app"))
+ReactDOM.render(<App />, document.getElementById('app'));

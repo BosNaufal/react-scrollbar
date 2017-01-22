@@ -1,16 +1,16 @@
 {
   "name": "react-scrollbar-js",
-  "version": "0.0.10",
+  "version": "1.0.0",
   "description": "The Simplest Scroll Area Component with custom scrollbar for React Js",
   "main": "./dist/react-scrollbar.js",
   "scripts": {
-    "prepublish": "npm run lint && npm run build",
+    "prepublish": "npm run lint && npm run build && npm run getstyles",
+    "getstyles": "cp src/style_default.scss doc/examples && node-sass src/style_default.scss --output doc/examples",
     "start": "webpack-dev-server --inline --hot --config webpack.dev.config.js",
     "build": "webpack --config webpack.publish.config.js",
     "compile": "babel src --out-dir out && node-sass src --output out",
     "lint": "eslint src --ext .jsx,.js",
-    "lintfix": "eslint src --ext .jsx,.js --fix",
-    "test": "echo AAA && echo BBB"
+    "lintfix": "eslint src --ext .jsx,.js --fix"
   },
   "repository": {
     "type": "git",
@@ -56,11 +56,11 @@
     "react-dom": "^15.4.2",
     "sass-loader": "^4.1.1",
     "style-loader": "^0.13.1",
-    "webpack": "^2.2.0-rc.4",
-    "webpack-dev-server": "^2.2.0-rc.0"
+    "webpack": "^2.2.0",
+    "webpack-dev-server": "^2.2.0",
+    "react-dom": "^15.0.0||^14.0.0"
   },
   "peerDependencies": {
-    "react": "^15.0.0||^14.0.0",
-    "react-dom": "^15.0.0||^14.0.0"
+    "react": "^15.0.0||^14.0.0"
   }
 }

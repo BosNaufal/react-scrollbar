@@ -1,6 +1,6 @@
 {
   "name": "react-scrollbar-js",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0",
   "description": "The Simplest Scroll Area Component with custom scrollbar for React Js",
   "main": "./dist/react-scrollbar.js",
   "scripts": {

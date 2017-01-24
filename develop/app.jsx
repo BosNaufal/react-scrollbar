@@ -10,7 +10,7 @@ class App extends React.Component {
 
   render() {
     const myScrollbar = {
-      width: '60%',
+      maxWidth: 550,
       minWidth: 300,
       maxHeight: 450,
       border: '5px #2196F3 solid',

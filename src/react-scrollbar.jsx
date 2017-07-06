@@ -264,6 +264,8 @@ class ScrollWrapper extends React.Component {
   }
 
   scroll(e) {
+
+    e.persist();
     e.preventDefault();
 
     // Make sure the content height is not changed

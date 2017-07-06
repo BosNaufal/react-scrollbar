@@ -16,9 +16,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -101,7 +101,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _verticalScrollbar = __webpack_require__(4);
+var _verticalScrollbar = __webpack_require__(5);
 
 var _verticalScrollbar2 = _interopRequireDefault(_verticalScrollbar);
 
@@ -109,7 +109,7 @@ var _horizontalScrollbar = __webpack_require__(3);
 
 var _horizontalScrollbar2 = _interopRequireDefault(_horizontalScrollbar);
 
-__webpack_require__(7);
+__webpack_require__(8);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -414,6 +414,7 @@ var ScrollWrapper = function (_React$Component) {
     value: function scroll(e) {
       var _this6 = this;
 
+      e.persist();
       e.preventDefault();
 
       // Make sure the content height is not changed
@@ -661,27 +662,25 @@ var HorizontalScrollbar = function (_React$Component) {
       var _this2 = this;
 
       if (this.state.dragging) {
-        (function () {
-          // Make The Parent being in the Dragging State
-          _this2.props.onDragging();
+        // Make The Parent being in the Dragging State
+        this.props.onDragging();
 
-          event.preventDefault();
-          event.stopPropagation();
+        event.preventDefault();
+        event.stopPropagation();
 
-          var e = event.changedTouches ? event.changedTouches[0] : event;
+        var e = event.changedTouches ? event.changedTouches[0] : event;
 
-          var xMovement = e.clientX - _this2.state.start;
-          var xMovementPercentage = xMovement / _this2.props.wrapper.width * 100;
+        var xMovement = e.clientX - this.state.start;
+        var xMovementPercentage = xMovement / this.props.wrapper.width * 100;
 
-          // Update the last e.clientX
-          _this2.setState({ start: e.clientX }, function () {
-            // The next Horizontal Value will be
-            var next = _this2.props.scrolling + xMovementPercentage;
+        // Update the last e.clientX
+        this.setState({ start: e.clientX }, function () {
+          // The next Horizontal Value will be
+          var next = _this2.props.scrolling + xMovementPercentage;
 
-            // Tell the parent to change the position
-            _this2.props.onChangePosition(next, 'horizontal');
-          });
-        })();
+          // Tell the parent to change the position
+          _this2.props.onChangePosition(next, 'horizontal');
+        });
       }
     }
   }, {
@@ -715,24 +714,22 @@ var HorizontalScrollbar = function (_React$Component) {
       var isContainer = e.target === this.container;
 
       if (isContainer) {
-        (function () {
-          // Get the Element Position
-          var position = _this3.scrollbar.getBoundingClientRect();
+        // Get the Element Position
+        var position = this.scrollbar.getBoundingClientRect();
 
-          // Calculate the horizontal Movement
-          var xMovement = e.clientX - position.left;
-          var centerize = _this3.state.width / 2;
-          var xMovementPercentage = xMovement / _this3.props.wrapper.width * 100 - centerize;
+        // Calculate the horizontal Movement
+        var xMovement = e.clientX - position.left;
+        var centerize = this.state.width / 2;
+        var xMovementPercentage = xMovement / this.props.wrapper.width * 100 - centerize;
 
-          // Update the last e.clientX
-          _this3.setState({ start: e.clientX }, function () {
-            // The next Horizontal Value will be
-            var next = _this3.props.scrolling + xMovementPercentage;
+        // Update the last e.clientX
+        this.setState({ start: e.clientX }, function () {
+          // The next Horizontal Value will be
+          var next = _this3.props.scrolling + xMovementPercentage;
 
-            // Tell the parent to change the position
-            _this3.props.onChangePosition(next, 'horizontal');
-          });
-        })();
+          // Tell the parent to change the position
+          _this3.props.onChangePosition(next, 'horizontal');
+        });
       }
     }
   }, {
@@ -809,6 +806,25 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _reactScrollbar = __webpack_require__(1);
+
+var _reactScrollbar2 = _interopRequireDefault(_reactScrollbar);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = _reactScrollbar2.default;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(0);
@@ -873,27 +889,25 @@ var VerticalScrollbar = function (_React$Component) {
       var _this2 = this;
 
       if (this.state.dragging) {
-        (function () {
-          // Make The Parent being in the Dragging State
-          _this2.props.onDragging();
+        // Make The Parent being in the Dragging State
+        this.props.onDragging();
 
-          event.preventDefault();
-          event.stopPropagation();
+        event.preventDefault();
+        event.stopPropagation();
 
-          var e = event.changedTouches ? event.changedTouches[0] : event;
+        var e = event.changedTouches ? event.changedTouches[0] : event;
 
-          var yMovement = e.clientY - _this2.state.start;
-          var yMovementPercentage = yMovement / _this2.props.wrapper.height * 100;
+        var yMovement = e.clientY - this.state.start;
+        var yMovementPercentage = yMovement / this.props.wrapper.height * 100;
 
-          // Update the last e.clientY
-          _this2.setState({ start: e.clientY }, function () {
-            // The next Vertical Value will be
-            var next = _this2.props.scrolling + yMovementPercentage;
+        // Update the last e.clientY
+        this.setState({ start: e.clientY }, function () {
+          // The next Vertical Value will be
+          var next = _this2.props.scrolling + yMovementPercentage;
 
-            // Tell the parent to change the position
-            _this2.props.onChangePosition(next, 'vertical');
-          });
-        })();
+          // Tell the parent to change the position
+          _this2.props.onChangePosition(next, 'vertical');
+        });
       }
     }
   }, {
@@ -946,24 +960,22 @@ var VerticalScrollbar = function (_React$Component) {
       var isContainer = e.target === this.container;
 
       if (isContainer) {
-        (function () {
-          // Get the Element Position
-          var position = _this3.scrollbar.getBoundingClientRect();
+        // Get the Element Position
+        var position = this.scrollbar.getBoundingClientRect();
 
-          // Calculate the vertical Movement
-          var yMovement = e.clientY - position.top;
-          var centerize = _this3.state.height / 2;
-          var yMovementPercentage = yMovement / _this3.props.wrapper.height * 100 - centerize;
+        // Calculate the vertical Movement
+        var yMovement = e.clientY - position.top;
+        var centerize = this.state.height / 2;
+        var yMovementPercentage = yMovement / this.props.wrapper.height * 100 - centerize;
 
-          // Update the last e.clientY
-          _this3.setState({ start: e.clientY }, function () {
-            // The next Vertical Value will be
-            var next = _this3.props.scrolling + yMovementPercentage;
+        // Update the last e.clientY
+        this.setState({ start: e.clientY }, function () {
+          // The next Vertical Value will be
+          var next = _this3.props.scrolling + yMovementPercentage;
 
-            // Tell the parent to change the position
-            _this3.props.onChangePosition(next, 'vertical');
-          });
-        })();
+          // Tell the parent to change the position
+          _this3.props.onChangePosition(next, 'vertical');
+        });
       }
     }
   }, {
@@ -1030,7 +1042,7 @@ VerticalScrollbar.propTypes = {
 exports.default = VerticalScrollbar;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
@@ -1044,7 +1056,7 @@ exports.push([module.i, ".react-scrollbar-default .-reactjs-scrollbar-area\\:scr
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports) {
 
 /*
@@ -1060,7 +1072,7 @@ var stylesInDom = {},
 		};
 	},
 	isOldIE = memoize(function() {
-		return /msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase());
+		return /msie [6-9]\b/.test(self.navigator.userAgent.toLowerCase());
 	}),
 	getHeadElement = memoize(function () {
 		return document.head || document.getElementsByTagName("head")[0];
@@ -1296,23 +1308,23 @@ function updateLink(linkElement, obj) {
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(5);
+var content = __webpack_require__(6);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(6)(content, {});
+var update = __webpack_require__(7)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../node_modules/css-loader/index.js!./../node_modules/sass-loader/index.js!./style_default.scss", function() {
-			var newContent = require("!!./../node_modules/css-loader/index.js!./../node_modules/sass-loader/index.js!./style_default.scss");
+		module.hot.accept("!!../node_modules/css-loader/index.js!../node_modules/sass-loader/index.js!./style_default.scss", function() {
+			var newContent = require("!!../node_modules/css-loader/index.js!../node_modules/sass-loader/index.js!./style_default.scss");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -1320,25 +1332,6 @@ if(false) {
 	// When the module is disposed, remove the <style> tags
 	module.hot.dispose(function() { update(); });
 }
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _reactScrollbar = __webpack_require__(1);
-
-var _reactScrollbar2 = _interopRequireDefault(_reactScrollbar);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = _reactScrollbar2.default;
 
 /***/ })
 /******/ ]);

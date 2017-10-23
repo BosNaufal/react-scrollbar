@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class VerticalScrollbar extends React.Component {
 
@@ -181,13 +182,13 @@ class VerticalScrollbar extends React.Component {
 
 // The Props
 VerticalScrollbar.propTypes = {
-  draggingFromParent: React.PropTypes.bool.isRequired,
-  scrolling: React.PropTypes.number.isRequired,
-  wrapper: React.PropTypes.shape().isRequired,
-  area: React.PropTypes.shape().isRequired,
-  onChangePosition: React.PropTypes.func.isRequired,
-  onDragging: React.PropTypes.func.isRequired,
-  onStopDrag: React.PropTypes.func.isRequired,
+  draggingFromParent: PropTypes.bool.isRequired,
+  scrolling: PropTypes.number.isRequired,
+  wrapper: PropTypes.shape().isRequired,
+  area: PropTypes.shape().isRequired,
+  onChangePosition: PropTypes.func.isRequired,
+  onDragging: PropTypes.func.isRequired,
+  onStopDrag: PropTypes.func.isRequired,
 };
 
 export default VerticalScrollbar;
